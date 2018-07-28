@@ -1,0 +1,67 @@
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+    <env:Body>
+        <amp:GetReferencedObjectsResponse xmlns:amp="http://www.datapower.com/schemas/appliance/management/3.0">
+            <amp:Objects>
+                <amp:Object name="ftp_mpgw" class-name="MultiProtocolGateway" class-display-name="Multi-Protocol Gateway" referencedExternally="false">
+                    <amp:ReferencedObject name="HTTP_7744" class-name="HTTPSourceProtocolHandler" class-display-name="HTTP Front Side Handler"/>
+                    <amp:ReferencedObject name="default" class-name="XMLManager" class-display-name="XML Manager"/>
+                    <amp:ReferencedObject name="google" class-name="StylePolicy" class-display-name="Processing Policy"/>
+                    <amp:ReferencedObject name="ftp_mpgw" class-name="PolicyAttachments" class-display-name="Policy Attachment"/>
+                    <amp:UserComments/>
+                </amp:Object>
+                <amp:Object name="ftp_mpgw" class-name="PolicyAttachments" class-display-name="Policy Attachment" referencedExternally="false">
+                    <amp:UserComments/>
+                </amp:Object>
+                <amp:Object name="google" class-name="StylePolicy" class-display-name="Processing Policy" referencedExternally="true">
+                    <amp:ReferencedObject name="google" class-name="Matching" class-display-name="Matching Rule"/>
+                    <amp:ReferencedObject name="google_request" class-name="StylePolicyRule" class-display-name="Processing Rule"/>
+                    <amp:ReferencedObject name="google_response" class-name="StylePolicyRule" class-display-name="Processing Rule"/>
+                    <amp:UserComments/>
+                </amp:Object>
+                <amp:Object name="google_response" class-name="StylePolicyRule" class-display-name="Processing Rule" referencedExternally="true">
+                    <amp:ReferencedObject name="google_response_results" class-name="StylePolicyAction" class-display-name="Processing Action"/>
+                    <amp:UserComments/>
+                </amp:Object>
+                <amp:Object name="google_response_results" class-name="StylePolicyAction" class-display-name="Processing Action" referencedExternally="true">
+                    <amp:UserComments/>
+                </amp:Object>
+                <amp:Object name="google_request" class-name="StylePolicyRule" class-display-name="Processing Rule" referencedExternally="true">
+                    <amp:ReferencedObject name="google_request_validate_0" class-name="StylePolicyAction" class-display-name="Processing Action"/>
+                    <amp:ReferencedObject name="google_request_xform_0" class-name="StylePolicyAction" class-display-name="Processing Action"/>
+                    <amp:ReferencedObject name="google_request_setvar_0" class-name="StylePolicyAction" class-display-name="Processing Action"/>
+                    <amp:ReferencedObject name="google_request_results" class-name="StylePolicyAction" class-display-name="Processing Action"/>
+                    <amp:UserComments/>
+                </amp:Object>
+                <amp:Object name="google_request_results" class-name="StylePolicyAction" class-display-name="Processing Action" referencedExternally="true">
+                    <amp:UserComments/>
+                </amp:Object>
+                <amp:Object name="google_request_setvar_0" class-name="StylePolicyAction" class-display-name="Processing Action" referencedExternally="true">
+                    <amp:UserComments/>
+                </amp:Object>
+                <amp:Object name="google_request_xform_0" class-name="StylePolicyAction" class-display-name="Processing Action" referencedExternally="true">
+                    <amp:UserComments/>
+                </amp:Object>
+                <amp:Object name="google_request_validate_0" class-name="StylePolicyAction" class-display-name="Processing Action" referencedExternally="true">
+                    <amp:UserComments/>
+                </amp:Object>
+                <amp:Object name="google" class-name="Matching" class-display-name="Matching Rule" referencedExternally="true">
+                    <amp:UserComments/>
+                </amp:Object>
+                <amp:Object name="default" class-name="XMLManager" class-display-name="XML Manager" referencedExternally="true">
+                    <amp:ReferencedObject name="default" class-name="HTTPUserAgent" class-display-name="User Agent"/>
+                    <amp:UserComments>Default XML-Manager</amp:UserComments>
+                </amp:Object>
+                <amp:Object name="default" class-name="HTTPUserAgent" class-display-name="User Agent" referencedExternally="true">
+                    <amp:UserComments>Default User Agent</amp:UserComments>
+                </amp:Object>
+                <amp:Object name="HTTP_7744" class-name="HTTPSourceProtocolHandler" class-display-name="HTTP Front Side Handler" referencedExternally="false">
+                    <amp:UserComments/>
+                </amp:Object>
+            </amp:Objects>
+            <amp:Files>
+                <amp:File>local:///sample.xsd</amp:File>
+                <amp:File>local:///sample.xsl</amp:File>
+            </amp:Files>
+        </amp:GetReferencedObjectsResponse>
+    </env:Body>
+</env:Envelope>
