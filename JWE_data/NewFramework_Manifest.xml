@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entries>
+<entry match="regex" method="GET/POST/DELTE/PUT">
+   <ServiceMetadata>
+      <SourceApp>Need to be sent in ANZ-Application-Id Header</SourceApp>
+      <TargetApp>Provider</TargetApp>
+      <OperationName>Service Name</OperationName>
+      <ConditionalRouting>Y or N</ConditionalRouting>
+	  <!--Can be Xpath or XSL -->
+	  <Routing type=""></Routing>
+      <SourceConfig>
+         <SourceFormat>JSON or XML</SourceFormat>
+         <TransformationType>JS or XSL</TransformationType>
+         
+         <CSTransform>File Path</CSTransform>
+        
+         <SCTransform>File Path</SCTransform>
+         <actions>Header and custom actions</actions>
+      </SourceConfig>
+      <!--Multiple Config can be defined if conditional routing is enabled -->
+      <TargetConfig name="">
+         <TargetFormat>JSON or XML</TargetFormat>
+         <TransformationType>JS or XSL</TransformationType>
+         
+         <CTTransform>File Path</CTTransform>
+        
+         <TCTransform>File Path</TCTransform>
+         <actions>Header and custom actions</actions>
+         <EndpointConfig>
+            <urls>
+               <!-- Multiple Environment URL can be defined -->
+               <url env="" domain="" />
+            </urls>
+			<Timeout></Timeout>
+            <!--Any of below profile can be used -->
+            <SSLProxyProfile />
+            <SSLClientProfile />
+         </EndpointConfig>
+      </TargetConfig>
+   </ServiceMetadata>
+   <RouterMetadata>
+      <Authorize>Y or N</Authorize>
+   </RouterMetadata>
+</entry>
+</entries>
+
+
