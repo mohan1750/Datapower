@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routingInfo>
+	<routing-urls>
+            <url  type="proxy">http://127.0.0.1:9444</url>		
+	</routing-urls>
+</routingInfo>
