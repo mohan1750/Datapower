@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service name="SSHttpRqRplyResttoRest" version="01">	
+
+	<action name="STRIP-SOAP">local://ondisk/common/utils/stripSoapEnvelope.xsl</action>
+	<action name="ADD-SOAP">local://ondisk/common/utils/addSoapEnvelope.xsl</action>
+	<action name="NULL-TRANSFORM">local://ondisk/common/utils/copyTemplate.xsl</action>
+	<action name="HTTP-RQHEADER-HANDLER">local://ondisk/common/utils/httpRqHeaderHandler06.xsl</action>
+	<action name="HTTP-RSHEADER-HANDLER">local://ondisk/common/utils/httpRsHeaderHandler04.xsl</action>
+	<action name="MQ-RQHEADER-HANDLER">local://ondisk/common/utils/mqRqHeaderHandler01.xsl</action>
+	<action name="JMS-RQHEADER-HANDLER">local://ondisk/common/utils/jmsRqHeaderHandler01.xsl</action>
+	<action name="SSI-URI-HANDLER">local://ondisk/common/utils/SsiUriHandler01.xsl</action>
+	
+</service>

@@ -1,0 +1,4 @@
+<File name="InputData">
+<!-- capture all data into this tag -->
+<Field name="InputDataTag"/>
+</File> 

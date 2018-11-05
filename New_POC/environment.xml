@@ -1,0 +1,15 @@
+<environment name="FRM01">
+	<!-- ALL/NONE/FRONT/BACK -->
+	<log-enabled value="ALL"/>
+	<!-- Y/N -->
+	<detail-log-enabled value="N"/>
+	<LogRule>Common_Log_Rule</LogRule>
+	<filesystem-path>local:///ondisk/</filesystem-path>
+        <common-config-path>local:///ondisk/common/config/</common-config-path>
+	<filesystem-path-services>local:///ondisk/services/</filesystem-path-services>
+	<filesystem-path-applications>local:///ondisk/environment/applications/</filesystem-path-applications>
+	<filesystem-path-api>local:///ondisk/api/</filesystem-path-api>
+	<ssi-configuration-path>local:///ondisk/services/SSI/configuration/</ssi-configuration-path>
+	<ssi-s-transform-path>local:///ondisk/services/SSI/transform/</ssi-s-transform-path>
+	<ssi-t-transform-path>local:///ondisk/services/SSI/transform/</ssi-t-transform-path>
+</environment>

@@ -1,0 +1,4 @@
+<File name="logInputFile">
+<!-- capture all data into this tag -->
+<Field name="logInputTag" />
+</File> 

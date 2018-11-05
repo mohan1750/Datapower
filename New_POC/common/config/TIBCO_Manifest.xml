@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entries>
+	<entry match="(^\/get\/data)$" method="GET">
+		<ServiceMetadata>
+			<OperationName>Service Name</OperationName>
+			<ConditionalRouting>Y or N</ConditionalRouting>
+			<!--Can be Xpath or XSL -->
+			<Routing type=""/>
+			<ServiceTransformation>Y or N</ServiceTransformation>
+                        <!-- If passthru no need to define source and target config -->
+			<SourceConfig>
+				<SourceFormat>JSON or XML</SourceFormat>
+				<TransformationType>JS or XSL</TransformationType>
+				<CSTransform>File Path</CSTransform>
+				<SCTransform>File Path</SCTransform>
+				<actions>Header and custom actions</actions>
+			</SourceConfig>
+			<!--Multiple Config can be defined if conditional routing is enabled -->
+			<TargetConfig name="">
+				<TargetFormat>JSON or XML</TargetFormat>
+				<TransformationType>JS or XSL</TransformationType>
+				<CTTransform>File Path</CTTransform>
+				<TCTransform>File Path</TCTransform>
+				<actions>Header and custom actions</actions>
+                                <EndpointConfig>
+                                   <TargetSystem>TIBCO</TargetSystem>
+                                </EndpointConfig>
+			</TargetConfig>
+		</ServiceMetadata>
+		<RouterMetadata>
+			<Authorize enabled="Y">
+				<attribute-value name="member">CN=audpclient02.dev.anz, O=ANZ, L=Melbourne, ST=VIC, C=AU</attribute-value>
+			</Authorize>
+			<LogRule>Common_Log_Rule02</LogRule>
+		</RouterMetadata>
+	</entry>
+	<entry match="(^\/post\/data)$" method="POST">
+		<ServiceMetadata>
+			<OperationName>Service Name</OperationName>
+			<ConditionalRouting>N</ConditionalRouting>
+			<!--Can be Xpath or XSL -->
+			<Routing type=""/>
+			<ServiceTransformation>Y</ServiceTransformation>
+                        <!-- If passthru no need to define source and target config -->
+			<SourceConfig>
+				<SourceFormat>JSON or XML</SourceFormat>
+				<TransformationType>JS or XSL</TransformationType>
+				<CSTransform/>
+				<SCTransform/>
+				<actions/>
+			</SourceConfig>
+			<!--Multiple Config can be defined if conditional routing is enabled -->
+			<TargetConfig name="">
+				<TargetFormat>JSON or XML</TargetFormat>
+				<TransformationType>JS or XSL</TransformationType>
+				<CTTransform/>
+				<TCTransform/>
+				<actions/>
+                                <EndpointConfig>
+                                   <TargetSystem>TIBCO</TargetSystem>
+                                   <uri type="set">uri/picked</uri>
+                                </EndpointConfig>
+			</TargetConfig>
+		</ServiceMetadata>
+		<RouterMetadata>
+			<Authorize enabled="Y">
+				<attribute-value name="member">CN=audpclient02.dev.anz, O=ANZ, L=Melbourne, ST=VIC, C=AU</attribute-value>
+			</Authorize>
+			<LogRule>Common_Log_Rule02</LogRule>
+		</RouterMetadata>
+	</entry>
+</entries>
