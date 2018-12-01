@@ -37,21 +37,21 @@
                     <label for="exampleHost" class="form-text">Appliance</label>
                     <select id="host" name="host" class="form-control" placeholder="">
                         <optgroup>
-                            <option value="192.168.81.129">Local</option>
-                         	<option value="new">Add New Appliance</option>
+                        	<option value="">---Select---</option>
                         </optgroup>
                     </select>
                     
                   </div>
             <div class="form-group">
                 <div class="form-label-group">
-                  <input type="text" id="inputUserName" class="form-control" placeholder="Password" required="required">
+                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                  <input type="text" id="inputUserName" class="form-control" placeholder="Password" required data-error-msg="Please enter your User name.">
                   <label for="inputUserName">Username</label>
                 </div>
               </div>
               <div class="form-group">
                 <div class="form-label-group">
-                  <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="required">
+                  <input type="password" id="inputPassword" class="form-control" placeholder="Password" required data-error-msg="Please enter your Password">
                   <label for="inputPassword">Password</label>
                 </div>
               </div>
@@ -65,17 +65,11 @@
                     </optgroup>
                 </select>
                 </div>
-              </div>
-            <div class="form-group">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" value="remember-me">
-                  Remember Password
-                </label>
-              </div>
-            </div>
-            <a class="btn btn-primary btn-block" href="home.jsp">Login</a>
+                 <a class="btn btn-primary btn-block form-control" href="home.jsp">Login</a>
           </form>
+              </div>
+
+           
           <div class="text-center">
             <a class="d-block small mt-3" href="register.jsp">Register Here</a>
             <a class="d-block small" href="forgot-password.jsp">Forgot Password?</a>
@@ -119,15 +113,19 @@
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 	<script>
 	$(document).ready(function () {
-        
+		history.pushState(null, null, location.href);
+	    window.onpopstate = function () {
+	        history.go(1);
+	    };
             
             var url = "/appliances";
 
             $.getJSON(url, function (data) {
                 $.each(data, function (index, value) {
                     // APPEND OR INSERT DATA TO SELECT ELEMENT.
-                    $('#sel').append('<option value="' + value.ID + '">' + value.Name + '</option>');
+                    $('#host').append('<option value="' + value + '">' + value + '</option>');
                 });
+                $('#host').append('<option value="new">Add New Appliance</option>');
             });
         });
 	$("#host").change(function () {
@@ -140,11 +138,14 @@
 	  .change();
 	$("#Addbutton").click(function(){
 		var appl=$('#newhost').val();
-		/* $.ajax({url: "/appliances?appl="+appl, success: function(result){
-            $("#div1").html(result);
-        }*/  
-        $('#response').html("<h4 class=\"alert alert-success\">Appliance with hostname<b> "+appl+" </b>is added successfully</h4>");
-		}); 
+		 $.ajax({url: "/addappliances?appl="+appl, success: function(result){
+			 $('#response').html("<h4 class=\"alert alert-success\">Appliance with hostname<b> "+appl+" </b>is added successfully</h4>");
+        } 
+        //$('#response').html("<h4 class=\"alert alert-success\">Appliance with hostname<b> "+appl+" </b>is added successfully</h4>");
+		});
+		 $('#exampleModalCenter').modal('hide');
+		 location.reload();
+	});
 	</script>
   </body>
 
