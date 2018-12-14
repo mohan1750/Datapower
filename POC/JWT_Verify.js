@@ -78,8 +78,17 @@ try {
         Accept: 'application/json'
     };
 
-    var serviceEndpoint = 'http://jwksregistry.apps.anz:8445'
-    var targetUrl = serviceEndpoint + '/issuers/' + encodeURIComponent(issuer) + '/keys/' + encodeURIComponent(kid);
+    var serviceEndpoint = '';
+    var customURL=hm.current.get('jwkURL');
+    if((typeof(customURL) === 'undefined')){
+        //If Custome JWK URL  provided then validate against Custom JWK registry
+        serviceEndpoint = customURL;
+    }
+    else{
+        // If Custome JWK URL not provided then by default validate against STI JWK registry
+        serviceEndpoint ='https://auth.service.dev/oidc/.well-known/jwks.json';
+    }
+    var targetUrl = serviceEndpoint;
     apic.setvariable('RegistrytargetUrl', targetUrl);
 
 
