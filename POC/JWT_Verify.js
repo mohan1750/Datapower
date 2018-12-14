@@ -2,20 +2,14 @@ var jwt = require('jwt');
 var hm = require('header-metadata');
 var sm = require('service-metadata');
 var urlopen = require('urlopen');
-//var apic = require('local:///isp/policy/apim.custom.js');
-//var props = apic.getPolicyProperty();
-//var apiScopes = props.scopes;
-//var tokenHeader = props.tokenHeader;
-//var scopeVerificationRequired = props.scopeVerificationRequired;
 var traceId = hm.current.get('x-b3-traceid');
 var spanId = hm.current.get('x-b3-spanid');
-var apiScopes= hm.current.get('scopes').split(',');
-//var catalog = hm.current.get('env.path');
-var errors={};
+var apiScopes = hm.current.get('scopes').split(',');
+
 try {
     //Retrieve Token from HTTP Header
     var bearertoken = hm.current.get('authorization');;
-    if (typeof(bearertoken) === 'undefined') {
+    if (typeof (bearertoken) === 'undefined') {
         throw {
             name: "Unauthorized",
             message: "Missing access token",
@@ -42,23 +36,23 @@ try {
     var jwtSplitTokens = buff.split('.');
     var encodedClaim = jwtSplitTokens[1];
     var decodedClaim = JSON.parse(new Buffer(encodedClaim, 'base64').toString('utf-8'));
-    hm.current.set('JWTClaim', decodedClaim);
+    console.error('JWTClaim subject: ' + decodedClaim.sub);
     var issuer = decodedClaim.iss;
     var reqScopes = decodedClaim.scopes || decodedClaim.scope;
-    
-    if (typeof(reqScopes) === 'string') {
-	reqScopes = reqScopes.split(' ');
-	
+
+    if (typeof (reqScopes) === 'string') {
+        reqScopes = reqScopes.split(' ');
+
     };
 
-    
+
 
     var encodedHeader = jwtSplitTokens[0];
     var decodedHeader = JSON.parse(new Buffer(encodedHeader, 'base64').toString('utf-8'));
     var kid = decodedHeader.kid;
 
-    if ((typeof(kid) === 'undefined') || (typeof(kid) === 'undefined')) {
-       throw {
+    if ((typeof (kid) === 'undefined') || (typeof (kid) === 'undefined')) {
+        throw {
             name: "Unauthorized",
             message: "Missing kid or issuer",
             errorType: "JWTError",
@@ -74,22 +68,24 @@ try {
     var httpheaders = {
         ['x-b3-traceid']: traceId,
         ['x-b3-spanid']: spanId,
-        ['x-api-environment']: catalog,
         Accept: 'application/json'
     };
 
     var serviceEndpoint = '';
-    var customURL=hm.current.get('jwkURL');
-    if((typeof(customURL) === 'undefined')){
+    var customURL = hm.current.get('jwkURL');
+    console.error('Custom JWK URL: '+ typeof(customURL));
+    if (!(typeof (customURL) === 'undefined')) {
         //If Custome JWK URL  provided then validate against Custom JWK registry
+        console.error('Custom URL has been provided:'+ customURL);
         serviceEndpoint = customURL;
-    }
-    else{
+    } else {
         // If Custome JWK URL not provided then by default validate against STI JWK registry
-        serviceEndpoint ='https://auth.service.dev/oidc/.well-known/jwks.json';
+        //serviceEndpoint ='https://auth.service.dev/oidc/.well-known/jwks.json';
+        console.error('Custom URL has not been provided. Proceeding with STI JWK Registry');
+        serviceEndpoint = 'http://10.0.0.25:8091/get';
     }
     var targetUrl = serviceEndpoint;
-    apic.setvariable('RegistrytargetUrl', targetUrl);
+    console.log('RegistrytargetUrl: ' + targetUrl);
 
 
 
@@ -100,74 +96,124 @@ try {
         headers: httpheaders,
     };
 
-    urlopen.open(options, function(error, response) {
-                
+    urlopen.open(options, function (error, response) {
+
         if (error) {
-                                                                apic.error('JWTError', 401, 'Unauthorized', 'Unable to connect to JWKs Registry');
+            throw {
+                name: "Unauthorized",
+                message: "Unable to connect to JWKs Registry",
+                errorType: "JWTError",
+                errorCode: "401"
+            }
         }
 
-                                if (response.statusCode == 500) {
-                                                console.error('not able to connect to JWKs registry');
-                                                apic.error('JWTError', 401, 'Unauthorized', 'Unable to connect to JWKs Registry');
-        }
-                                
-                                if (response.statusCode != 200) {
-                                                console.error('Couldnt get JWK for given issuer and kid ' + response.statusCode);
-                                                apic.error('JWTError', 401, 'Unauthorized', 'Invalid Issuer');
-            
-        }
-                                
-        response.readAsJSON(function(error, jwsJWK) {
-            if (error) {
-                apic.error('JWTError', 401, 'Unauthorized', 'Not a valid JWK');
+        if (response.statusCode == 500) {
+            console.error('not able to connect to JWKs registry');
+            throw {
+                name: "Unauthorized",
+                message: "Unable to connect to JWKs Registry",
+                errorType: "JWTError",
+                errorCode: "401"
             }
-	    
-       var key = "key_ops";
-       if (jwsJWK[key]) {
-             delete jwsJWK[key];
-           } 	
-            decoder.addOperation('verify', jwsJWK).addOperation({ validateDataType: true,  validateAudience: false,  validateExpiration: true,  validateNotBefore: true },'validate',{'aud': 'xxxx'}).decode(function(error, claims) {
+
+        }
+
+        if (response.statusCode != 200) {
+            console.error('Couldnt get JWK for given issuer and kid ' + response.statusCode);
+            throw {
+                name: "Unauthorized",
+                message: "Invalid Issuer",
+                errorType: "JWTError",
+                errorCode: "401"
+            }
+
+
+        }
+
+        response.readAsJSON(function (error, jwsJWK) {
+            if (error) {
+                throw {
+                    name: "Unauthorized",
+                    message: "Not a valid JWK",
+                    errorType: "JWTError",
+                    errorCode: "401"
+                }
+            }
+
+            var key = "key_ops";
+            if (jwsJWK[key]) {
+                delete jwsJWK[key];
+            }
+            decoder.addOperation('verify', jwsJWK).addOperation({
+                validateDataType: true,
+                validateAudience: false,
+                validateExpiration: true,
+                validateNotBefore: true
+            }, 'validate', {
+                'aud': 'xxxx'
+            }).decode(function (error, claims) {
                 if (error) {
 
                     var errorPhrase = error.errorMessage;
                     if (errorPhrase.includes('expired')) {
+                        throw {
+                            name: "Unauthorized",
+                            message: "The access token expired",
+                            errorType: "JWTError",
+                            errorCode: "401"
+                        }
 
-                        apic.error('JWTError', 401, 'Unauthorized', 'The access token expired, ' + errorPhrase);
 
                     } else {
-
-                        apic.error('JWTError', 403, 'Forbidden', 'Invalid token signature, '+ errorPhrase );
+                        throw {
+                            name: "Forbidden",
+                            message: "Invalid token signature",
+                            errorType: "JWTError",
+                            errorCode: "403"
+                        }
+                        //apic.error('JWTError', 403, 'Forbidden', 'Invalid token signature, '+ errorPhrase );
 
                     }
                 } else {
-                    apic.setvariable('SignatureValidation', 'success');
+                    console.error('SignatureValidation success');
 
 
-                        var scopeFound = false;
+                    var scopeFound = false;
 
-                        for (var i = 0; i < reqScopes.length; i++) {
-                            if (apiScopes.indexOf(reqScopes[i]) >= 0) {
-                                scopeFound = true;
-                                break;
-                            }
-                        };
+                    for (var i = 0; i < reqScopes.length; i++) {
+                        if (apiScopes.indexOf(reqScopes[i]) >= 0) {
+                            scopeFound = true;
+                            break;
+                        }
+                    };
 
-                        if (!scopeFound) {
-
-                            apic.error('JWTError', 403, 'Forbidden', 'Insufficient Scope');
-
-                        } else {
-                            apic.setvariable('JWTvalidation', 'success');
+                    if (!scopeFound) {
+                        throw {
+                            name: "Forbidden",
+                            message: "Insufficient Scope",
+                            errorType: "JWTError",
+                            errorCode: "403"
                         }
 
-                   
+
+                    } else {
+                        session.output.write(claims);
+                    }
+
+
 
                 }
             })
         });
-
+        //session.output.write(decodedClaim);
 
     });
+    //session.output.write(decodedClaim);
 } catch (e) {
-    apic.error(e.errorType, e.errorCode, e.name, e.message);
+    var errorresponse = {};
+    errorresponse.name = e.name;
+    errorresponse.code = e.errorCode;
+    errorresponse.type = e.errorType;
+    errorresponse.message = e.message;
+    session.output.write(errorresponse);
 }
