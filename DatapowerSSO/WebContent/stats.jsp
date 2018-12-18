@@ -207,7 +207,7 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="index.html">Logout</a>
+            <a class="btn btn-primary" href="index.jsp">Logout</a>
           </div>
         </div>
       </div>
@@ -230,7 +230,14 @@
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-bar-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
-
+	<script>
+	var myNewURL = "Monitor";
+    window.history.pushState({}, document.title, "/" + myNewURL );
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+	</script>
   </body>
 
 </html>

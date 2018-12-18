@@ -126,40 +126,63 @@
           <!-- Breadcrumbs-->
           <ol class="breadcrumb">
             <li class="breadcrumb-item">
-              <a href="#">Dashboard</a>
+              <a href="#">Development</a>
             </li>
-            <li class="breadcrumb-item active">Tables</li>
+            <li class="breadcrumb-item active">Services</li>
           </ol>
 
           <!-- DataTables Example -->
           <div class="card mb-3">
             <div class="card-header">
               <i class="fas fa-table"></i>
-              Data Table Example</div>
+              Service Management</div>
             <div class="card-body">
+            <form class="form-inline">
+   
+                    <label for="exampleDomain" class="form-text">Domain</label> &nbsp;
+                    <select id="domain" name="domain" class="form-control" placeholder="">
+                        <optgroup>
+                        	
+                        </optgroup>
+                    </select>
+                    &nbsp; &nbsp;
+                    	<label for="exampleProvider" class="form-text">Provider</label> &nbsp;
+                    <select id="provider" name="provider" class="form-control" placeholder="">
+                        <optgroup>
+                        	<option value="">----- Select -----</option>
+                        </optgroup>
+                    </select>
+                    &nbsp; &nbsp;
+                    <button type="button" class="btn btn-primary" id="ServiceButton">Get Services</button>
+                    
+                    
+              </form> 
+              <br/><br/>   
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>Name</th>
-                      <th>Position</th>
-                      <th>Office</th>
-                      <th>Age</th>
-                      <th>Start date</th>
-                      <th>Salary</th>
+                      <th>Service Name</th>
+                      <th>HTTP Method</th>
+                      <th>URI/RegExp</th>
+                      <th>Transformation</th>
+                      <th>Provider</th>
+                      <th>LogRule</th>
+                      <th>AAAEnabled</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>Name</th>
-                      <th>Position</th>
-                      <th>Office</th>
-                      <th>Age</th>
-                      <th>Start date</th>
-                      <th>Salary</th>
+                      <th>Service Name</th>
+                      <th>HTTP Method</th>
+                      <th>URI/RegExp</th>
+                      <th>Transformation</th>
+                      <th>Provider</th>
+                      <th>LogRule</th>
+                      <th>AAAEnabled</th>
                     </tr>
                   </tfoot>
-                  <tbody>
+                  <!-- <tbody>
                     <tr>
                       <td>Tiger Nixon</td>
                       <td>System Architect</td>
@@ -616,7 +639,7 @@
                       <td>2011/01/25</td>
                       <td>$112,000</td>
                     </tr>
-                  </tbody>
+                  </tbody> -->
                 </table>
               </div>
             </div>
@@ -663,7 +686,7 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="index.html">Logout</a>
+            <a class="btn btn-primary" href="index.jsp">Logout</a>
           </div>
         </div>
       </div>
@@ -684,8 +707,62 @@
     <script src="js/sb-admin.min.js"></script>
 
     <!-- Demo scripts for this page-->
-    <script src="js/demo/datatables-demo.js"></script>
-
+	<script>
+	$(document).ready(function () {
+	 var myNewURL = "developer";
+    window.history.pushState({}, document.title, "/" + myNewURL );
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    }; 
+    $('#dataTable').dataTable();
+    $.getJSON('/domains', function (data) {
+    	var list=data.domain;
+    	$('#domain').append('<option value="">---Select---</option>');
+        $.each(list, function (index, value) {
+            // APPEND OR INSERT DATA TO SELECT ELEMENT.
+            
+            $('#domain').append('<option value="' + value.name + '">' + value.name + '</option>');
+        });
+    });
+    
+	});
+	
+	$("#domain").change(function () {
+	    var str = "";
+	    str=$('#domain').val();
+	    /* $.getJSON('/providers?domain='+str, function (data) {
+	    	
+	    	var list=data.filestore.location.file;
+            $.each(list, function (index, value) {
+                // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                $('#provider').append('<option value="' + value.name.split("_")[0] + '">' + value.name.split("_")[0] + '</option>');
+            });
+           
+        }); */
+        var jqxhr=$.ajax('/providers?domain='+str)
+        	.done(function(data){
+        		
+        		var error=data.error;
+        		if(!error){
+        			var list=data.filestore.location.file;
+        			$.each(list, function (index, value) {
+                        // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                        $('#provider').append('<option value="' + value.name.split("_")[0] + '">' + value.name.split("_")[0] + '</option>');
+                    });
+        		}
+        		else{
+        			$('#provider option').remove();
+        			$('#provider').append('<option value="">---Select---</option>');
+        		}
+                
+        	});
+        	
+        
+	    	
+	  })
+	  .change();
+	</script>
   </body>
 
 </html>

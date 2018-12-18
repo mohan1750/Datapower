@@ -31,7 +31,12 @@
       <div class="card card-login mx-auto mt-5">
         <div class="card-header">IBM Datapower Login</div>
         <div class="card-body">
-          <form>
+          <form id="form1" action="/Login">
+          
+                        
+                    <p style="color: red;" align="center">${error}</p>
+                    
+                 
                 <div class="form-group">
                         
                     <label for="exampleHost" class="form-text">Appliance</label>
@@ -45,13 +50,13 @@
             <div class="form-group">
                 <div class="form-label-group">
                   <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input type="text" id="inputUserName" class="form-control" placeholder="Password" required data-error-msg="Please enter your User name.">
+                  <input type="text" id="inputUserName" name="name" class="form-control" placeholder="UserName" required data-error-msg="Please enter your User name.">
                   <label for="inputUserName">Username</label>
                 </div>
               </div>
               <div class="form-group">
                 <div class="form-label-group">
-                  <input type="password" id="inputPassword" class="form-control" placeholder="Password" required data-error-msg="Please enter your Password">
+                  <input type="password" id="inputPassword" name="pass" class="form-control" placeholder="Password" required data-error-msg="Please enter your Password">
                   <label for="inputPassword">Password</label>
                 </div>
               </div>
@@ -65,7 +70,7 @@
                     </optgroup>
                 </select>
                 </div>
-                 <a class="btn btn-primary btn-block form-control" href="home.jsp">Login</a>
+                 <button type="button" class="btn btn-primary form-control" id="Loginbutton">Login</button>
           </form>
               </div>
 
@@ -113,10 +118,12 @@
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 	<script>
 	$(document).ready(function () {
+		 var myNewURL = "signin";
+        window.history.pushState({}, document.title, "/" + myNewURL );
 		history.pushState(null, null, location.href);
 	    window.onpopstate = function () {
 	        history.go(1);
-	    };
+	    }; 
             
             var url = "/appliances";
 
@@ -145,6 +152,10 @@
 		});
 		 $('#exampleModalCenter').modal('hide');
 		 location.reload();
+	});
+	$("#Loginbutton").click(function(){
+		document.getElementById("form1").submit();
+		 
 	});
 	</script>
   </body>

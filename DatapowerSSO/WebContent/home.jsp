@@ -763,10 +763,12 @@
     <script src="js/demo/datatables-demo.js"></script>
     <script src="js/demo/chart-area-demo.js"></script>
     <script>
+     var myNewURL = "admin";
+    window.history.pushState({}, document.title, "/" + myNewURL );
     history.pushState(null, null, location.href);
     window.onpopstate = function () {
         history.go(1);
-    };
+    }; 
     </script>
 
   </body>

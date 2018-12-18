@@ -32,6 +32,7 @@
         <div class="card-header">Register Your Admin Account</div>
         <div class="card-body">
           <form name="form1">
+          <p style="color: red;" align="center">${error}</p>
             <div class="form-group">
               <div class="form-row">
                 <div class="col-md-6">
@@ -133,7 +134,9 @@
         $("#files").shieldUpload();
     });
     $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();   
+        $('[data-toggle="tooltip"]').tooltip();
+        var myNewURL = "signup";
+        window.history.pushState({}, document.title, "/" + myNewURL );
     });
     function register(){
 

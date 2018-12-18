@@ -57,8 +57,8 @@ public class RegisterHandler extends HttpServlet {
         RegisterUser ru=new RegisterUser();
         GetUser gu=new GetUser();
         UserBean ubr=gu.getUser(ub.getAdminid());
-        System.out.println("User exists: "+ubr.getPhoto());
-        if(ubr.getAdminid().equals(ub.getAdminid())) {
+        //System.out.println("User exists: "+ubr.getPhoto());
+        if(ubr.getAdminid()!= null && ubr.getAdminid().equals(ub.getAdminid())) {
         	out.print(jo);
 			response.setStatus(202, "Duplicate Record");
         }
