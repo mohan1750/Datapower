@@ -22,7 +22,9 @@
 
     <!-- Page level plugin CSS-->
     <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
-
+    <link href="https://cdn.datatables.net/buttons/1.5.4/css/buttons.bootstrap4.min.css" rel="stylesheet">
+	<link href="https://cdn.datatables.net/select/1.2.7/css/select.bootstrap4.min.css" rel="stylesheet">
+    <link href="css/editor.bootstrap4.min.css" rel="stylesheet">
     <!-- Custom styles for this template-->
     <link href="css/sb-admin.css" rel="stylesheet">
 
@@ -702,20 +704,26 @@
     <!-- Page level plugin JavaScript-->
     <script src="vendor/datatables/jquery.dataTables.js"></script>
     <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
-
+	<script src="https://cdn.datatables.net/buttons/1.5.4/js/dataTables.buttons.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/1.5.4/js/buttons.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+    <script src="js/dataTables.editor.min.js"></script>
+    <script src="js/editor.bootstrap4.min.js"></script>
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin.min.js"></script>
 
     <!-- Demo scripts for this page-->
 	<script>
+	var editor;
 	$(document).ready(function () {
+		
 	 var myNewURL = "developer";
     window.history.pushState({}, document.title, "/" + myNewURL );
     history.pushState(null, null, location.href);
     window.onpopstate = function () {
         history.go(1);
     }; 
-    $('#dataTable').dataTable();
+    
     $.getJSON('/domains', function (data) {
     	var list=data.domain;
     	$('#domain').append('<option value="">---Select---</option>');
@@ -725,7 +733,76 @@
             $('#domain').append('<option value="' + value.name + '">' + value.name + '</option>');
         });
     });
+    //Initialize DataTable Editor
+    editor = new $.fn.dataTable.Editor( {
+        ajax: {
+            create: {
+                type: 'POST',
+                url:  '/postservice'
+            },
+            edit: {
+                type: 'POST',
+                url:  '/postservice'
+            },
+            remove: {
+                type: 'POST',
+                url:  '/deleteservice'
+            }
+        },
+        table: "#dataTable",
+        fields: [ {
+                label: "Service Name:",
+                name: "service_name"
+            }, {
+                label: "HTTP Method:",
+                name: "method"
+            }, {
+                label: "URI/RegExp:",
+                name: "uri"
+            }, {
+                label: "Transformation:",
+                name: "transform"
+            }, {
+                label: "Provider:",
+                name: "provider"
+            }, {
+                label: "LogRule:",
+                name: "log_rule"
+            }, {
+                label: "AAAEnabled:",
+                name: "aaa"
+            }
+        ]
+    } );
     
+    //$('#dataTable').dataTable();
+    
+    
+	});
+	
+	$("#ServiceButton").click(function(){
+		var domain=$('#domain').val();
+		var provider=$('#provider').val();
+		 // DataTables rendering
+		$('#dataTable').DataTable( {
+	        dom: "Bfrtip",
+	        ajax: "/developservices?domain="+domain+"&amp;provider="+provider,
+	        columns: [
+	            { data: "ServiceMetadata.OperationName" },
+	            { data: "method" },
+	            { data: "match" },
+	            { data: "ServiceMetadata.ServiceTransformation" },
+	            { data: "ServiceMetadata.TargetConfig.EndpointConfig.TargetSystem" },
+	            { data: "RouterMetadata.LogRule" },
+	            { data: "RouterMetadata.Authorize.enabled" }
+	        ],
+	        select: true,
+	        buttons: [
+	            { extend: "create", editor: editor },
+	            { extend: "edit",   editor: editor },
+	            { extend: "remove", editor: editor }
+	        ]
+	    } );
 	});
 	
 	$("#domain").change(function () {

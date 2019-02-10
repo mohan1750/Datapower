@@ -151,6 +151,8 @@
         //$('#response').html("<h4 class=\"alert alert-success\">Appliance with hostname<b> "+appl+" </b>is added successfully</h4>");
 		});
 		 $('#exampleModalCenter').modal('hide');
+		 window.history.pushState({}, document.title, "/" );
+		 history.pushState(null, null, location.href);
 		 location.reload();
 	});
 	$("#Loginbutton").click(function(){
