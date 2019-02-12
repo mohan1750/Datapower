@@ -3,3 +3,9 @@ https://www.jqueryscript.net/table/Feature-Rich-Data-Table-Bootstrap.html
 https://github.com/wenzhixin/bootstrap-table-examples
 
 https://bootstrap-table.com/docs/getting-started/introduction/
+
+
+
+
+
+https://gijgo.com/grid/demos/bootstrap-4-table --->Working
