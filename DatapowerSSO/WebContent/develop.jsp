@@ -159,10 +159,10 @@
 						<div class="row">
 							<div class="col-9">
 								<form class="form-inline">
-									<input id="txtName" type="text" placeholder="Name..."
+									<input id="txtName" type="text" placeholder="ServiceName..."
 										class="form-control mb-2 mr-sm-2 mb-sm-0" /> <input
-										id="txtPlaceOfBirth" type="text"
-										placeholder="Place Of Birth..."
+										id="txtURI" type="text"
+										placeholder="URI..."
 										class="form-control mb-2 mr-sm-2 mb-sm-0" />
 
 									<button id="btnSearch" type="button" class="btn btn-default">Search</button>
@@ -213,7 +213,7 @@
 		<footer class="sticky-footer">
 			<div class="container my-auto">
 				<div class="copyright text-center my-auto">
-					<span>Copyright Â© Your Website 2018</span>
+					<span>Copyright © Your Website 2018</span>
 				</div>
 			</div>
 		</footer>
@@ -238,7 +238,7 @@
 					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
 					<button class="close" type="button" data-dismiss="modal"
 						aria-label="Close">
-						<span aria-hidden="true">Ã—</span>
+						<span aria-hidden="true">×</span>
 					</button>
 				</div>
 				<div class="modal-body">Select "Logout" below if you are ready
@@ -264,14 +264,14 @@
 	
 	<script type="text/javascript">
         var grid, dialog;
-		data = [
+		/*data = [
                 { 'ID': 1, 'Name': 'Hristo Stoichkov', 'PlaceOfBirth': 'Plovdiv, Bulgaria' },
-                { 'ID': 2, 'Name': 'Ronaldo LuÃ­s NazÃ¡rio de Lima', 'PlaceOfBirth': 'Rio de Janeiro, Brazil' },
+                { 'ID': 2, 'Name': 'Ronaldo Luís Nazário de Lima', 'PlaceOfBirth': 'Rio de Janeiro, Brazil' },
                 { 'ID': 3, 'Name': 'David Platt', 'PlaceOfBirth': 'Chadderton, Lancashire, England' },
                 { 'ID': 4, 'Name': 'Manuel Neuer', 'PlaceOfBirth': 'Gelsenkirchen, West Germany' },
-                { 'ID': 5, 'Name': 'James RodrÃ­guez', 'PlaceOfBirth': 'CÃºcuta, Colombia' },
+                { 'ID': 5, 'Name': 'James Rodríguez', 'PlaceOfBirth': 'Cúcuta, Colombia' },
                 { 'ID': 6, 'Name': 'Dimitar Berbatov', 'PlaceOfBirth': 'Blagoevgrad, Bulgaria' }
-            ];
+            ];*/
         function Edit(e) {
             $('#ID').val(e.data.id);
             $('#Name').val(e.data.record.Name);
@@ -294,6 +294,7 @@
                     dialog.close();
                 });
         }
+        
         function Delete(e) {
             if (confirm('Are you sure?')) {
                 $.ajax({ url: '/Players/Delete', data: { id: e.data.id }, method: 'POST' })
@@ -306,7 +307,7 @@
             }
         }
         $(document).ready(function () {
-            grid = $('#grid').grid({
+           /* grid = $('#grid').grid({
                 primaryKey: 'ID',
                 dataSource: data,
                 uiLibrary: 'bootstrap4',
@@ -318,7 +319,8 @@
                     { title: '', field: 'Delete', width: 42, type: 'icon', icon: 'fa fa-remove', tooltip: 'Delete', events: { 'click': Delete } }
                 ],
                 pager: { limit: 5, sizes: [2, 5, 10, 20] }
-            });
+            });*/
+            
             dialog = $('#dialog').dialog({
                 uiLibrary: 'bootstrap4',
                 iconsLibrary: 'fontawesome',
@@ -337,12 +339,12 @@
                 dialog.close();
             });
             $('#btnSearch').on('click', function () {
-                grid.reload({ name: $('#txtName').val(), placeOfBirth: $('#txtPlaceOfBirth').val() });
+                grid.reload({ ServiceName: $('#txtName').val(), URI: $('#txtURI').val() });
             });
             $('#btnClear').on('click', function () {
                 $('#txtName').val('');
-                $('#txtPlaceOfBirth').val('');
-                grid.reload({ name: '', placeOfBirth: '' });
+                $('#txtURI').val('');
+                grid.reload({ ServiceName: '', URI: '' });
             });
             var myNewURL = "developer";
             window.history.pushState({}, document.title, "/" + myNewURL );
@@ -364,8 +366,63 @@
         		var domain=$('#domain').val();
         		var provider=$('#provider').val();
         		 // DataTables rendering
-        		alert("domain:"+domain+" provider: "+provider);
+        		
+        		$.ajax('/developservices?domain='+domain+"&provider="+provider)
+            	.done(function(entries){
+            		var error=entries.error;
+            		if(!error){
+            			/*var list=data.filestore.location.file;
+            			$.each(list, function (index, value) {
+                            // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                            $('#provider').append('<option value="' + value.name.split("_")[0] + '">' + value.name.split("_")[0] + '</option>');
+                        }); */
+                        
+                        var data=[];
+                        $.each(entries, function (index, value) {
+                            // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                            
+                           var entry={};
+                            entry.ID=index+1;
+                            entry.ServiceName=value.ServiceMetadata.OperationName;
+                            entry.Method=value.method;
+                            entry.URI=value.match;
+                            entry.Transformation=value.ServiceMetadata.ServiceTransformation;
+                            entry.AAA=value.RouterMetadata.Authorize.enabled;
+                            entry.TargetApp=value.ServiceMetadata.TargetConfig.name;
+                           console.log("Entry:"+JSON.stringify(entry));
+                            data.push(entry);
+                        });
+                        
+                        grid= $('#grid').grid({
+                            primaryKey: 'ID',
+                            dataSource: data,
+                            uiLibrary: 'bootstrap4',
+                            columns: [
+                                { field: 'ID', width: 48 },
+                                { field: 'ServiceName',title: 'Service Name', sortable: true },
+                                { field: 'Method',title: 'Protocol Method'},
+                                { field: 'URI', title: 'Service URI', sortable: true },
+                                { field: 'Transformation',title: 'Transformation'},
+                                { field: 'AAA',title: 'AAA Enabled'},
+                                { field: 'TargetApp',title: 'Target APP'},
+                                { title: '', field: 'Edit', width: 42, type: 'icon', icon: 'fa fa-edit', tooltip: 'Edit', events: { 'click': Edit } },
+                                { title: '', field: 'Delete', width: 42, type: 'icon', icon: 'fa fa-remove', tooltip: 'Delete', events: { 'click': Delete } }
+                            ],
+                            pager: { limit: 5, sizes: [2, 5, 10, 20] }
+                        });
+                       
+            		}
+            		else{
+            			alert("No Services available with selected provider:"+provider);
+            			
+            		}
+            		
+            	})
+        		 
         	});
+            $("#provider").change(function () {
+            	$('#grid').grid('destroy', true, true);
+            });
             $("#domain").change(function () {
         	    var str = "";
         	    str=$('#domain').val();

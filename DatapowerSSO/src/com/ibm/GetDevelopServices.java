@@ -1,6 +1,5 @@
 package com.ibm;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 
 import javax.ws.rs.client.Client;
@@ -9,15 +8,13 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.XML;
-
-import com.ibm.SSLUtilities;
+import org.json.simple.parser.JSONParser;
 
 public class GetDevelopServices {
+	public static int PRETTY_PRINT_INDENT_FACTOR = 4;
 	public JSONArray getServices(String user,String pass,String host,String domain,String provider) {
 		SSLUtilities.trustAllHostnames();
 		SSLUtilities.trustAllHttpsCertificates();
@@ -31,15 +28,29 @@ public class GetDevelopServices {
 				 
 				 Response response = build.get();
 				 String ress=response.readEntity(String.class);
-				 System.out.println("File content: "+ress);
+				 //System.out.println("File content: "+ress);
 				 JSONParser parser = new JSONParser();
 				 if(response.getStatus() == 200)
 				 {
-					 JSONObject obj = new JSONObject(ress);
-					 //System.out.println(obj);
-					 JSONObject obj2=obj.getJSONObject("entries");
-					 JSONArray retobj=obj2.getJSONArray("entry");
-					 return retobj;
+					 JSONObject obj = (JSONObject)parser.parse(ress);
+					String file=(String) obj.get("file");
+					 String xml=new String(Base64.getDecoder().decode(file));
+					 org.json.JSONObject xmlJSONObj=XML.toJSONObject(xml);
+					 String jsonPrettyPrintString = xmlJSONObj.toString(PRETTY_PRINT_INDENT_FACTOR);
+					 JSONObject obj2=(JSONObject) parser.parse(jsonPrettyPrintString);
+			            JSONObject obj3=(JSONObject)obj2.get("entries");
+			            JSONArray entries=(JSONArray)obj3.get("entry");
+			            return entries;
+					 /*System.out.println(obj);
+					 String file=obj.getString("file");
+					 b=Base64.getDecoder().decode(file);
+					 String xml=new String(b);
+					 JSONObject xmlJSONObj = XML.toJSONObject(xml);
+			            String jsonPrettyPrintString = xmlJSONObj.toString(PRETTY_PRINT_INDENT_FACTOR);
+			            JSONObject obj2=(JSONObject) parser.parse(jsonPrettyPrintString);
+			            JSONObject obj3=obj2.getJSONObject("entries");
+			            JSONArray entries=obj3.getJSONArray("entry");
+			            return entries;*/
 				 }
 				 else {
 					 return null;

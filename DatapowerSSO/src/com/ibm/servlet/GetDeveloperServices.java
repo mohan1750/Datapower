@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
 
 import com.ibm.GetDevelopServices;
 
@@ -42,7 +41,7 @@ public class GetDeveloperServices extends HttpServlet {
 		String domain=request.getParameter("domain");
 		String provider=request.getParameter("provider");
 		GetDevelopServices gds=new GetDevelopServices();
-		JSONArray jo=(JSONArray)gds.getServices(user, pass, host, domain, provider);
+		JSONArray jo=gds.getServices(user, pass, host, domain, provider);
 		PrintWriter out = response.getWriter();
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
