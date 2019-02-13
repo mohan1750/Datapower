@@ -1,845 +1,407 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
+<head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="img/ibm-icon.ico"/>
-    <meta name="description" content="">
-    <meta name="author" content="">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="shortcut icon" href="img/ibm-icon.ico" />
+<meta name="description" content="">
+<meta name="author" content="">
 
-    <title>IBM Datapower Developer Console</title>
+<title>IBM Datapower Developer Console</title>
 
-    <!-- Bootstrap core CSS-->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap core CSS-->
+<script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/gijgo.min.js" type="text/javascript"></script>
+    <link href="css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+     <link href="css/font-awesome.min.css" rel="stylesheet">
 
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="vendor/fontawesome-free/css/all.css" rel="stylesheet" type="text/css"> 
 
     <!-- Page level plugin CSS-->
     <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/buttons/1.5.4/css/buttons.bootstrap4.min.css" rel="stylesheet">
-	<link href="https://cdn.datatables.net/select/1.2.7/css/select.bootstrap4.min.css" rel="stylesheet">
-    <link href="css/editor.bootstrap4.min.css" rel="stylesheet">
+
     <!-- Custom styles for this template-->
     <link href="css/sb-admin.css" rel="stylesheet">
+</head>
 
-  </head>
+<body id="page-top">
 
-  <body id="page-top">
+	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-    <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+		<a class="navbar-brand mr-1" href="index.html">IBM Datapower</a>
 
-      <a class="navbar-brand mr-1" href="index.html">IBM Datapower</a>
+		<button class="btn btn-link btn-sm text-white order-1 order-sm-0"
+			id="sidebarToggle" href="#">
+			<i class="fas fa-bars"></i>
+		</button>
 
-      <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
-        <i class="fas fa-bars"></i>
-      </button>
+		<!-- Navbar Search -->
+		<form
+			class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+			<div class="input-group">
+				<input type="text" class="form-control" placeholder="Search for..."
+					aria-label="Search" aria-describedby="basic-addon2">
+				<div class="input-group-append">
+					<button class="btn btn-primary" type="button">
+						<i class="fas fa-search"></i>
+					</button>
+				</div>
+			</div>
+		</form>
 
-      <!-- Navbar Search -->
-      <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-          <div class="input-group-append">
-            <button class="btn btn-primary" type="button">
-              <i class="fas fa-search"></i>
-            </button>
-          </div>
-        </div>
-      </form>
+		<!-- Navbar -->
+		<ul class="navbar-nav ml-auto ml-md-0">
+			<li class="nav-item dropdown no-arrow mx-1"><a
+				class="nav-link dropdown-toggle" href="#" id="alertsDropdown"
+				role="button" data-toggle="dropdown" aria-haspopup="true"
+				aria-expanded="false"> <i class="fas fa-bell fa-fw"></i> <span
+					class="badge badge-danger">9+</span>
+			</a>
+				<div class="dropdown-menu dropdown-menu-right"
+					aria-labelledby="alertsDropdown">
+					<a class="dropdown-item" href="#">Action</a> <a
+						class="dropdown-item" href="#">Another action</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#">Something else here</a>
+				</div></li>
+			<li class="nav-item dropdown no-arrow mx-1"><a
+				class="nav-link dropdown-toggle" href="#" id="messagesDropdown"
+				role="button" data-toggle="dropdown" aria-haspopup="true"
+				aria-expanded="false"> <i class="fas fa-envelope fa-fw"></i> <span
+					class="badge badge-danger">7</span>
+			</a>
+				<div class="dropdown-menu dropdown-menu-right"
+					aria-labelledby="messagesDropdown">
+					<a class="dropdown-item" href="#">Action</a> <a
+						class="dropdown-item" href="#">Another action</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#">Something else here</a>
+				</div></li>
+			<li class="nav-item dropdown no-arrow"><a
+				class="nav-link dropdown-toggle" href="#" id="userDropdown"
+				role="button" data-toggle="dropdown" aria-haspopup="true"
+				aria-expanded="false"> <i class="fas fa-user-circle fa-fw"></i>
+			</a>
+				<div class="dropdown-menu dropdown-menu-right"
+					aria-labelledby="userDropdown">
+					<a class="dropdown-item" href="#">Settings</a> <a
+						class="dropdown-item" href="#">Activity Log</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#" data-toggle="modal"
+						data-target="#logoutModal">Logout</a>
+				</div></li>
+		</ul>
 
-      <!-- Navbar -->
-      <ul class="navbar-nav ml-auto ml-md-0">
-        <li class="nav-item dropdown no-arrow mx-1">
-          <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-bell fa-fw"></i>
-            <span class="badge badge-danger">9+</span>
-          </a>
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="alertsDropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-        </li>
-        <li class="nav-item dropdown no-arrow mx-1">
-          <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-envelope fa-fw"></i>
-            <span class="badge badge-danger">7</span>
-          </a>
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="messagesDropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-        </li>
-        <li class="nav-item dropdown no-arrow">
-          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-user-circle fa-fw"></i>
-          </a>
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-            <a class="dropdown-item" href="#">Settings</a>
-            <a class="dropdown-item" href="#">Activity Log</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
-          </div>
-        </li>
-      </ul>
+	</nav>
 
-    </nav>
+	<div id="wrapper">
 
-    <div id="wrapper">
+		<!-- Sidebar -->
+		<ul class="sidebar navbar-nav">
+			<li class="nav-item"><a class="nav-link" href="home.jsp"> <i
+					class="fas fa-fw fa-tachometer-alt"></i> <span>Dashboard</span>
+			</a></li>
+			<li class="nav-item dropdown"><a class="nav-link"
+				href="admin.jsp"> <i class="fas fa-fw fa-server"></i> <span>Administration</span>
+			</a></li>
+			<li class="nav-item"><a class="nav-link" href="stats.jsp"> <i
+					class="fas fa-fw fa-chart-area"></i> <span>Statistics</span></a></li>
+			<li class="nav-item active"><a class="nav-link" href="#"> <i
+					class="fas fa-fw fa-table"></i> <span>Development</span></a></li>
+		</ul>
 
-      <!-- Sidebar -->
-      <ul class="sidebar navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="home.jsp">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link" href="admin.jsp">
-                <i class="fas fa-fw fa-server"></i>
-                <span>Administration</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="stats.jsp">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>Statistics</span></a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="#">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Development</span></a>
-            </li>
-          </ul>
+		<div id="content-wrapper">
 
-      <div id="content-wrapper">
+			<div class="container-fluid">
 
-        <div class="container-fluid">
+				<!-- Breadcrumbs-->
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="#">Development</a></li>
+					<li class="breadcrumb-item active">Services</li>
+				</ol>
 
-          <!-- Breadcrumbs-->
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-              <a href="#">Development</a>
-            </li>
-            <li class="breadcrumb-item active">Services</li>
-          </ol>
+				<!-- DataTables Example -->
+				<div class="card mb-3">
+					<div class="card-header">
+						<i class="fas fa-table"></i> Service Management
+					</div>
+					<div class="card-body">
+						<form class="form-inline">
 
-          <!-- DataTables Example -->
-          <div class="card mb-3">
-            <div class="card-header">
-              <i class="fas fa-table"></i>
-              Service Management</div>
-            <div class="card-body">
-            <form class="form-inline">
-   
-                    <label for="exampleDomain" class="form-text">Domain</label> &nbsp;
-                    <select id="domain" name="domain" class="form-control" placeholder="">
-                        <optgroup>
-                        	
-                        </optgroup>
-                    </select>
-                    &nbsp; &nbsp;
-                    	<label for="exampleProvider" class="form-text">Provider</label> &nbsp;
-                    <select id="provider" name="provider" class="form-control" placeholder="">
-                        <optgroup>
-                        	<option value="">----- Select -----</option>
-                        </optgroup>
-                    </select>
-                    &nbsp; &nbsp;
-                    <button type="button" class="btn btn-primary" id="ServiceButton">Get Services</button>
-                    
-                    
-              </form> 
-              <br/><br/>   
-              <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>Service Name</th>
-                      <th>HTTP Method</th>
-                      <th>URI/RegExp</th>
-                      <th>Transformation</th>
-                      <th>Provider</th>
-                      <th>LogRule</th>
-                      <th>AAAEnabled</th>
-                    </tr>
-                  </thead>
-                  <tfoot>
-                    <tr>
-                      <th>Service Name</th>
-                      <th>HTTP Method</th>
-                      <th>URI/RegExp</th>
-                      <th>Transformation</th>
-                      <th>Provider</th>
-                      <th>LogRule</th>
-                      <th>AAAEnabled</th>
-                    </tr>
-                  </tfoot>
-                  <!-- <tbody>
-                    <tr>
-                      <td>Tiger Nixon</td>
-                      <td>System Architect</td>
-                      <td>Edinburgh</td>
-                      <td>61</td>
-                      <td>2011/04/25</td>
-                      <td>$320,800</td>
-                    </tr>
-                    <tr>
-                      <td>Garrett Winters</td>
-                      <td>Accountant</td>
-                      <td>Tokyo</td>
-                      <td>63</td>
-                      <td>2011/07/25</td>
-                      <td>$170,750</td>
-                    </tr>
-                    <tr>
-                      <td>Ashton Cox</td>
-                      <td>Junior Technical Author</td>
-                      <td>San Francisco</td>
-                      <td>66</td>
-                      <td>2009/01/12</td>
-                      <td>$86,000</td>
-                    </tr>
-                    <tr>
-                      <td>Cedric Kelly</td>
-                      <td>Senior Javascript Developer</td>
-                      <td>Edinburgh</td>
-                      <td>22</td>
-                      <td>2012/03/29</td>
-                      <td>$433,060</td>
-                    </tr>
-                    <tr>
-                      <td>Airi Satou</td>
-                      <td>Accountant</td>
-                      <td>Tokyo</td>
-                      <td>33</td>
-                      <td>2008/11/28</td>
-                      <td>$162,700</td>
-                    </tr>
-                    <tr>
-                      <td>Brielle Williamson</td>
-                      <td>Integration Specialist</td>
-                      <td>New York</td>
-                      <td>61</td>
-                      <td>2012/12/02</td>
-                      <td>$372,000</td>
-                    </tr>
-                    <tr>
-                      <td>Herrod Chandler</td>
-                      <td>Sales Assistant</td>
-                      <td>San Francisco</td>
-                      <td>59</td>
-                      <td>2012/08/06</td>
-                      <td>$137,500</td>
-                    </tr>
-                    <tr>
-                      <td>Rhona Davidson</td>
-                      <td>Integration Specialist</td>
-                      <td>Tokyo</td>
-                      <td>55</td>
-                      <td>2010/10/14</td>
-                      <td>$327,900</td>
-                    </tr>
-                    <tr>
-                      <td>Colleen Hurst</td>
-                      <td>Javascript Developer</td>
-                      <td>San Francisco</td>
-                      <td>39</td>
-                      <td>2009/09/15</td>
-                      <td>$205,500</td>
-                    </tr>
-                    <tr>
-                      <td>Sonya Frost</td>
-                      <td>Software Engineer</td>
-                      <td>Edinburgh</td>
-                      <td>23</td>
-                      <td>2008/12/13</td>
-                      <td>$103,600</td>
-                    </tr>
-                    <tr>
-                      <td>Jena Gaines</td>
-                      <td>Office Manager</td>
-                      <td>London</td>
-                      <td>30</td>
-                      <td>2008/12/19</td>
-                      <td>$90,560</td>
-                    </tr>
-                    <tr>
-                      <td>Quinn Flynn</td>
-                      <td>Support Lead</td>
-                      <td>Edinburgh</td>
-                      <td>22</td>
-                      <td>2013/03/03</td>
-                      <td>$342,000</td>
-                    </tr>
-                    <tr>
-                      <td>Charde Marshall</td>
-                      <td>Regional Director</td>
-                      <td>San Francisco</td>
-                      <td>36</td>
-                      <td>2008/10/16</td>
-                      <td>$470,600</td>
-                    </tr>
-                    <tr>
-                      <td>Haley Kennedy</td>
-                      <td>Senior Marketing Designer</td>
-                      <td>London</td>
-                      <td>43</td>
-                      <td>2012/12/18</td>
-                      <td>$313,500</td>
-                    </tr>
-                    <tr>
-                      <td>Tatyana Fitzpatrick</td>
-                      <td>Regional Director</td>
-                      <td>London</td>
-                      <td>19</td>
-                      <td>2010/03/17</td>
-                      <td>$385,750</td>
-                    </tr>
-                    <tr>
-                      <td>Michael Silva</td>
-                      <td>Marketing Designer</td>
-                      <td>London</td>
-                      <td>66</td>
-                      <td>2012/11/27</td>
-                      <td>$198,500</td>
-                    </tr>
-                    <tr>
-                      <td>Paul Byrd</td>
-                      <td>Chief Financial Officer (CFO)</td>
-                      <td>New York</td>
-                      <td>64</td>
-                      <td>2010/06/09</td>
-                      <td>$725,000</td>
-                    </tr>
-                    <tr>
-                      <td>Gloria Little</td>
-                      <td>Systems Administrator</td>
-                      <td>New York</td>
-                      <td>59</td>
-                      <td>2009/04/10</td>
-                      <td>$237,500</td>
-                    </tr>
-                    <tr>
-                      <td>Bradley Greer</td>
-                      <td>Software Engineer</td>
-                      <td>London</td>
-                      <td>41</td>
-                      <td>2012/10/13</td>
-                      <td>$132,000</td>
-                    </tr>
-                    <tr>
-                      <td>Dai Rios</td>
-                      <td>Personnel Lead</td>
-                      <td>Edinburgh</td>
-                      <td>35</td>
-                      <td>2012/09/26</td>
-                      <td>$217,500</td>
-                    </tr>
-                    <tr>
-                      <td>Jenette Caldwell</td>
-                      <td>Development Lead</td>
-                      <td>New York</td>
-                      <td>30</td>
-                      <td>2011/09/03</td>
-                      <td>$345,000</td>
-                    </tr>
-                    <tr>
-                      <td>Yuri Berry</td>
-                      <td>Chief Marketing Officer (CMO)</td>
-                      <td>New York</td>
-                      <td>40</td>
-                      <td>2009/06/25</td>
-                      <td>$675,000</td>
-                    </tr>
-                    <tr>
-                      <td>Caesar Vance</td>
-                      <td>Pre-Sales Support</td>
-                      <td>New York</td>
-                      <td>21</td>
-                      <td>2011/12/12</td>
-                      <td>$106,450</td>
-                    </tr>
-                    <tr>
-                      <td>Doris Wilder</td>
-                      <td>Sales Assistant</td>
-                      <td>Sidney</td>
-                      <td>23</td>
-                      <td>2010/09/20</td>
-                      <td>$85,600</td>
-                    </tr>
-                    <tr>
-                      <td>Angelica Ramos</td>
-                      <td>Chief Executive Officer (CEO)</td>
-                      <td>London</td>
-                      <td>47</td>
-                      <td>2009/10/09</td>
-                      <td>$1,200,000</td>
-                    </tr>
-                    <tr>
-                      <td>Gavin Joyce</td>
-                      <td>Developer</td>
-                      <td>Edinburgh</td>
-                      <td>42</td>
-                      <td>2010/12/22</td>
-                      <td>$92,575</td>
-                    </tr>
-                    <tr>
-                      <td>Jennifer Chang</td>
-                      <td>Regional Director</td>
-                      <td>Singapore</td>
-                      <td>28</td>
-                      <td>2010/11/14</td>
-                      <td>$357,650</td>
-                    </tr>
-                    <tr>
-                      <td>Brenden Wagner</td>
-                      <td>Software Engineer</td>
-                      <td>San Francisco</td>
-                      <td>28</td>
-                      <td>2011/06/07</td>
-                      <td>$206,850</td>
-                    </tr>
-                    <tr>
-                      <td>Fiona Green</td>
-                      <td>Chief Operating Officer (COO)</td>
-                      <td>San Francisco</td>
-                      <td>48</td>
-                      <td>2010/03/11</td>
-                      <td>$850,000</td>
-                    </tr>
-                    <tr>
-                      <td>Shou Itou</td>
-                      <td>Regional Marketing</td>
-                      <td>Tokyo</td>
-                      <td>20</td>
-                      <td>2011/08/14</td>
-                      <td>$163,000</td>
-                    </tr>
-                    <tr>
-                      <td>Michelle House</td>
-                      <td>Integration Specialist</td>
-                      <td>Sidney</td>
-                      <td>37</td>
-                      <td>2011/06/02</td>
-                      <td>$95,400</td>
-                    </tr>
-                    <tr>
-                      <td>Suki Burks</td>
-                      <td>Developer</td>
-                      <td>London</td>
-                      <td>53</td>
-                      <td>2009/10/22</td>
-                      <td>$114,500</td>
-                    </tr>
-                    <tr>
-                      <td>Prescott Bartlett</td>
-                      <td>Technical Author</td>
-                      <td>London</td>
-                      <td>27</td>
-                      <td>2011/05/07</td>
-                      <td>$145,000</td>
-                    </tr>
-                    <tr>
-                      <td>Gavin Cortez</td>
-                      <td>Team Leader</td>
-                      <td>San Francisco</td>
-                      <td>22</td>
-                      <td>2008/10/26</td>
-                      <td>$235,500</td>
-                    </tr>
-                    <tr>
-                      <td>Martena Mccray</td>
-                      <td>Post-Sales support</td>
-                      <td>Edinburgh</td>
-                      <td>46</td>
-                      <td>2011/03/09</td>
-                      <td>$324,050</td>
-                    </tr>
-                    <tr>
-                      <td>Unity Butler</td>
-                      <td>Marketing Designer</td>
-                      <td>San Francisco</td>
-                      <td>47</td>
-                      <td>2009/12/09</td>
-                      <td>$85,675</td>
-                    </tr>
-                    <tr>
-                      <td>Howard Hatfield</td>
-                      <td>Office Manager</td>
-                      <td>San Francisco</td>
-                      <td>51</td>
-                      <td>2008/12/16</td>
-                      <td>$164,500</td>
-                    </tr>
-                    <tr>
-                      <td>Hope Fuentes</td>
-                      <td>Secretary</td>
-                      <td>San Francisco</td>
-                      <td>41</td>
-                      <td>2010/02/12</td>
-                      <td>$109,850</td>
-                    </tr>
-                    <tr>
-                      <td>Vivian Harrell</td>
-                      <td>Financial Controller</td>
-                      <td>San Francisco</td>
-                      <td>62</td>
-                      <td>2009/02/14</td>
-                      <td>$452,500</td>
-                    </tr>
-                    <tr>
-                      <td>Timothy Mooney</td>
-                      <td>Office Manager</td>
-                      <td>London</td>
-                      <td>37</td>
-                      <td>2008/12/11</td>
-                      <td>$136,200</td>
-                    </tr>
-                    <tr>
-                      <td>Jackson Bradshaw</td>
-                      <td>Director</td>
-                      <td>New York</td>
-                      <td>65</td>
-                      <td>2008/09/26</td>
-                      <td>$645,750</td>
-                    </tr>
-                    <tr>
-                      <td>Olivia Liang</td>
-                      <td>Support Engineer</td>
-                      <td>Singapore</td>
-                      <td>64</td>
-                      <td>2011/02/03</td>
-                      <td>$234,500</td>
-                    </tr>
-                    <tr>
-                      <td>Bruno Nash</td>
-                      <td>Software Engineer</td>
-                      <td>London</td>
-                      <td>38</td>
-                      <td>2011/05/03</td>
-                      <td>$163,500</td>
-                    </tr>
-                    <tr>
-                      <td>Sakura Yamamoto</td>
-                      <td>Support Engineer</td>
-                      <td>Tokyo</td>
-                      <td>37</td>
-                      <td>2009/08/19</td>
-                      <td>$139,575</td>
-                    </tr>
-                    <tr>
-                      <td>Thor Walton</td>
-                      <td>Developer</td>
-                      <td>New York</td>
-                      <td>61</td>
-                      <td>2013/08/11</td>
-                      <td>$98,540</td>
-                    </tr>
-                    <tr>
-                      <td>Finn Camacho</td>
-                      <td>Support Engineer</td>
-                      <td>San Francisco</td>
-                      <td>47</td>
-                      <td>2009/07/07</td>
-                      <td>$87,500</td>
-                    </tr>
-                    <tr>
-                      <td>Serge Baldwin</td>
-                      <td>Data Coordinator</td>
-                      <td>Singapore</td>
-                      <td>64</td>
-                      <td>2012/04/09</td>
-                      <td>$138,575</td>
-                    </tr>
-                    <tr>
-                      <td>Zenaida Frank</td>
-                      <td>Software Engineer</td>
-                      <td>New York</td>
-                      <td>63</td>
-                      <td>2010/01/04</td>
-                      <td>$125,250</td>
-                    </tr>
-                    <tr>
-                      <td>Zorita Serrano</td>
-                      <td>Software Engineer</td>
-                      <td>San Francisco</td>
-                      <td>56</td>
-                      <td>2012/06/01</td>
-                      <td>$115,000</td>
-                    </tr>
-                    <tr>
-                      <td>Jennifer Acosta</td>
-                      <td>Junior Javascript Developer</td>
-                      <td>Edinburgh</td>
-                      <td>43</td>
-                      <td>2013/02/01</td>
-                      <td>$75,650</td>
-                    </tr>
-                    <tr>
-                      <td>Cara Stevens</td>
-                      <td>Sales Assistant</td>
-                      <td>New York</td>
-                      <td>46</td>
-                      <td>2011/12/06</td>
-                      <td>$145,600</td>
-                    </tr>
-                    <tr>
-                      <td>Hermione Butler</td>
-                      <td>Regional Director</td>
-                      <td>London</td>
-                      <td>47</td>
-                      <td>2011/03/21</td>
-                      <td>$356,250</td>
-                    </tr>
-                    <tr>
-                      <td>Lael Greer</td>
-                      <td>Systems Administrator</td>
-                      <td>London</td>
-                      <td>21</td>
-                      <td>2009/02/27</td>
-                      <td>$103,500</td>
-                    </tr>
-                    <tr>
-                      <td>Jonas Alexander</td>
-                      <td>Developer</td>
-                      <td>San Francisco</td>
-                      <td>30</td>
-                      <td>2010/07/14</td>
-                      <td>$86,500</td>
-                    </tr>
-                    <tr>
-                      <td>Shad Decker</td>
-                      <td>Regional Director</td>
-                      <td>Edinburgh</td>
-                      <td>51</td>
-                      <td>2008/11/13</td>
-                      <td>$183,000</td>
-                    </tr>
-                    <tr>
-                      <td>Michael Bruce</td>
-                      <td>Javascript Developer</td>
-                      <td>Singapore</td>
-                      <td>29</td>
-                      <td>2011/06/27</td>
-                      <td>$183,000</td>
-                    </tr>
-                    <tr>
-                      <td>Donna Snider</td>
-                      <td>Customer Support</td>
-                      <td>New York</td>
-                      <td>27</td>
-                      <td>2011/01/25</td>
-                      <td>$112,000</td>
-                    </tr>
-                  </tbody> -->
-                </table>
-              </div>
-            </div>
-            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-          </div>
+							<label for="exampleDomain" class="form-text">Domain</label>
+							&nbsp; <select id="domain" name="domain" class="form-control"
+								placeholder="">
+								<optgroup>
 
-          <p class="small text-center text-muted my-5">
-            <em>More table examples coming soon...</em>
-          </p>
+								</optgroup>
+							</select> &nbsp; &nbsp; <label for="exampleProvider" class="form-text">Provider</label>
+							&nbsp; <select id="provider" name="provider" class="form-control"
+								placeholder="">
+								<optgroup>
+									<option value="">----- Select -----</option>
+								</optgroup>
+							</select> &nbsp; &nbsp;
+							<button type="button" class="btn btn-primary" id="ServiceButton">Get
+								Services</button>
 
-        </div>
-        <!-- /.container-fluid -->
 
-        <!-- Sticky Footer -->
-        <footer class="sticky-footer">
-          <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-              <span>Copyright � Your Website 2018</span>
-            </div>
-          </div>
-        </footer>
+						</form>
+						<br />
+						<br />
+						<div class="row">
+							<div class="col-9">
+								<form class="form-inline">
+									<input id="txtName" type="text" placeholder="Name..."
+										class="form-control mb-2 mr-sm-2 mb-sm-0" /> <input
+										id="txtPlaceOfBirth" type="text"
+										placeholder="Place Of Birth..."
+										class="form-control mb-2 mr-sm-2 mb-sm-0" />
 
-      </div>
-      <!-- /.content-wrapper -->
+									<button id="btnSearch" type="button" class="btn btn-default">Search</button>
+									&nbsp;
+									<button id="btnClear" type="button" class="btn btn-default">Clear</button>
+								</form>
+							</div>
+							<div class="col-3">
+								<button id="btnAdd" type="button"
+									class="btn btn-default float-right">Add New Record</button>
+							</div>
+						</div>
+						<div class="row" style="margin-top: 10px">
+							<div class="col-12">
+								<table id="grid"></table>
+							</div>
+						</div>
+					</div>
 
-    </div>
-    <!-- /#wrapper -->
+					<div id="dialog" style="display: none">
+						<input type="hidden" id="ID" />
+						<form>
+							<div class="form-group">
+								<label for="Name">Name</label> <input type="text"
+									class="form-control" id="Name">
+							</div>
+							<div class="form-group">
+								<label for="PlaceOfBirth">Place Of Birth</label> <input
+									type="text" class="form-control" id="PlaceOfBirth" />
+							</div>
+							<button type="button" id="btnSave" class="btn btn-default">Save</button>
+							<button type="button" id="btnCancel" class="btn btn-default">Cancel</button>
+						</form>
+					</div>
+				</div>
+				<div class="card-footer small text-muted">Updated yesterday at
+					11:59 PM</div>
+			</div>
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fas fa-angle-up"></i>
-    </a>
+			<p class="small text-center text-muted my-5">
+				<em>More table examples coming soon...</em>
+			</p>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">�</span>
-            </button>
-          </div>
-          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="index.jsp">Logout</a>
-          </div>
-        </div>
-      </div>
-    </div>
+		</div>
+		<!-- /.container-fluid -->
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
+		<!-- Sticky Footer -->
+		<footer class="sticky-footer">
+			<div class="container my-auto">
+				<div class="copyright text-center my-auto">
+					<span>Copyright © Your Website 2018</span>
+				</div>
+			</div>
+		</footer>
+
+	</div>
+	<!-- /.content-wrapper -->
+
+
+	<!-- /#wrapper -->
+
+	<!-- Scroll to Top Button-->
+	<a class="scroll-to-top rounded" href="#page-top"> <i
+		class="fas fa-angle-up"></i>
+	</a>
+
+	<!-- Logout Modal-->
+	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+					<button class="close" type="button" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div class="modal-body">Select "Logout" below if you are ready
+					to end your current session.</div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary" type="button"
+						data-dismiss="modal">Cancel</button>
+					<a class="btn btn-primary" href="index.jsp">Logout</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	
+
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Page level plugin JavaScript-->
-    <script src="vendor/datatables/jquery.dataTables.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.5.4/js/dataTables.buttons.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.5.4/js/buttons.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
-    <script src="js/dataTables.editor.min.js"></script>
-    <script src="js/editor.bootstrap4.min.js"></script>
-    <!-- Custom scripts for all pages-->
     <script src="js/sb-admin.min.js"></script>
-
-    <!-- Demo scripts for this page-->
-	<script>
-	var editor;
-	$(document).ready(function () {
-		
-	 var myNewURL = "developer";
-    window.history.pushState({}, document.title, "/" + myNewURL );
-    history.pushState(null, null, location.href);
-    window.onpopstate = function () {
-        history.go(1);
-    }; 
-    
-    $.getJSON('/domains', function (data) {
-    	var list=data.domain;
-    	$('#domain').append('<option value="">---Select---</option>');
-        $.each(list, function (index, value) {
-            // APPEND OR INSERT DATA TO SELECT ELEMENT.
-            
-            $('#domain').append('<option value="' + value.name + '">' + value.name + '</option>');
-        });
-    });
-    //Initialize DataTable Editor
-    editor = new $.fn.dataTable.Editor( {
-        ajax: {
-            create: {
-                type: 'POST',
-                url:  '/postservice'
-            },
-            edit: {
-                type: 'POST',
-                url:  '/postservice'
-            },
-            remove: {
-                type: 'POST',
-                url:  '/deleteservice'
-            }
-        },
-        table: "#dataTable",
-        fields: [ {
-                label: "Service Name:",
-                name: "service_name"
-            }, {
-                label: "HTTP Method:",
-                name: "method"
-            }, {
-                label: "URI/RegExp:",
-                name: "uri"
-            }, {
-                label: "Transformation:",
-                name: "transform"
-            }, {
-                label: "Provider:",
-                name: "provider"
-            }, {
-                label: "LogRule:",
-                name: "log_rule"
-            }, {
-                label: "AAAEnabled:",
-                name: "aaa"
-            }
-        ]
-    } );
-    
-    //$('#dataTable').dataTable();
-    
-    
-	});
+	<!-- Demo scripts for this page-->
 	
-	$("#ServiceButton").click(function(){
-		var domain=$('#domain').val();
-		var provider=$('#provider').val();
-		 // DataTables rendering
-		$('#dataTable').DataTable( {
-	        dom: "Bfrtip",
-	        ajax: "/developservices?domain="+domain+"&amp;provider="+provider,
-	        columns: [
-	            { data: "ServiceMetadata.OperationName" },
-	            { data: "method" },
-	            { data: "match" },
-	            { data: "ServiceMetadata.ServiceTransformation" },
-	            { data: "ServiceMetadata.TargetConfig.EndpointConfig.TargetSystem" },
-	            { data: "RouterMetadata.LogRule" },
-	            { data: "RouterMetadata.Authorize.enabled" }
-	        ],
-	        select: true,
-	        buttons: [
-	            { extend: "create", editor: editor },
-	            { extend: "edit",   editor: editor },
-	            { extend: "remove", editor: editor }
-	        ]
-	    } );
-	});
-	
-	$("#domain").change(function () {
-	    var str = "";
-	    str=$('#domain').val();
-	    /* $.getJSON('/providers?domain='+str, function (data) {
-	    	
-	    	var list=data.filestore.location.file;
-            $.each(list, function (index, value) {
-                // APPEND OR INSERT DATA TO SELECT ELEMENT.
-                $('#provider').append('<option value="' + value.name.split("_")[0] + '">' + value.name.split("_")[0] + '</option>');
+	<script type="text/javascript">
+        var grid, dialog;
+		data = [
+                { 'ID': 1, 'Name': 'Hristo Stoichkov', 'PlaceOfBirth': 'Plovdiv, Bulgaria' },
+                { 'ID': 2, 'Name': 'Ronaldo Luís Nazário de Lima', 'PlaceOfBirth': 'Rio de Janeiro, Brazil' },
+                { 'ID': 3, 'Name': 'David Platt', 'PlaceOfBirth': 'Chadderton, Lancashire, England' },
+                { 'ID': 4, 'Name': 'Manuel Neuer', 'PlaceOfBirth': 'Gelsenkirchen, West Germany' },
+                { 'ID': 5, 'Name': 'James Rodríguez', 'PlaceOfBirth': 'Cúcuta, Colombia' },
+                { 'ID': 6, 'Name': 'Dimitar Berbatov', 'PlaceOfBirth': 'Blagoevgrad, Bulgaria' }
+            ];
+        function Edit(e) {
+            $('#ID').val(e.data.id);
+            $('#Name').val(e.data.record.Name);
+            $('#PlaceOfBirth').val(e.data.record.PlaceOfBirth);
+            dialog.open('Edit Player');
+        }
+        function Save() {
+            var record = {
+                ID: $('#ID').val(),
+                Name: $('#Name').val(),
+                PlaceOfBirth: $('#PlaceOfBirth').val()
+            };
+            $.ajax({ url: '/Players/Save', data: { record: record }, method: 'POST' })
+                .done(function () {
+                    dialog.close();
+                    grid.reload();
+                })
+                .fail(function () {
+                    alert('Failed to save.');
+                    dialog.close();
+                });
+        }
+        function Delete(e) {
+            if (confirm('Are you sure?')) {
+                $.ajax({ url: '/Players/Delete', data: { id: e.data.id }, method: 'POST' })
+                    .done(function () {
+                        grid.reload();
+                    })
+                    .fail(function () {
+                        alert('Failed to delete.');
+                    });
+            }
+        }
+        $(document).ready(function () {
+            grid = $('#grid').grid({
+                primaryKey: 'ID',
+                dataSource: data,
+                uiLibrary: 'bootstrap4',
+                columns: [
+                    { field: 'ID', width: 48 },
+                    { field: 'Name', sortable: true },
+                    { field: 'PlaceOfBirth', title: 'Place Of Birth', sortable: true },
+                    { title: '', field: 'Edit', width: 42, type: 'icon', icon: 'fa fa-edit', tooltip: 'Edit', events: { 'click': Edit } },
+                    { title: '', field: 'Delete', width: 42, type: 'icon', icon: 'fa fa-remove', tooltip: 'Delete', events: { 'click': Delete } }
+                ],
+                pager: { limit: 5, sizes: [2, 5, 10, 20] }
             });
-           
-        }); */
-        var jqxhr=$.ajax('/providers?domain='+str)
-        	.done(function(data){
-        		
-        		var error=data.error;
-        		if(!error){
-        			var list=data.filestore.location.file;
-        			$.each(list, function (index, value) {
+            dialog = $('#dialog').dialog({
+                uiLibrary: 'bootstrap4',
+                iconsLibrary: 'fontawesome',
+                autoOpen: false,
+                resizable: false,
+                modal: true
+            });
+            $('#btnAdd').on('click', function () {
+                $('#ID').val('');
+                $('#Name').val('');
+                $('#PlaceOfBirth').val('');
+                dialog.open('Add Player');
+            });
+            $('#btnSave').on('click', Save);
+            $('#btnCancel').on('click', function () {
+                dialog.close();
+            });
+            $('#btnSearch').on('click', function () {
+                grid.reload({ name: $('#txtName').val(), placeOfBirth: $('#txtPlaceOfBirth').val() });
+            });
+            $('#btnClear').on('click', function () {
+                $('#txtName').val('');
+                $('#txtPlaceOfBirth').val('');
+                grid.reload({ name: '', placeOfBirth: '' });
+            });
+            var myNewURL = "developer";
+            window.history.pushState({}, document.title, "/" + myNewURL );
+            history.pushState(null, null, location.href);
+            window.onpopstate = function () {
+                history.go(1);
+            }; 
+            
+            $.getJSON('/domains', function (data) {
+            	var list=data.domain;
+            	$('#domain').append('<option value="">---Select---</option>');
+                $.each(list, function (index, value) {
+                    // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                    
+                    $('#domain').append('<option value="' + value.name + '">' + value.name + '</option>');
+                });
+            });
+            $("#ServiceButton").click(function(){
+        		var domain=$('#domain').val();
+        		var provider=$('#provider').val();
+        		 // DataTables rendering
+        		alert("domain:"+domain+" provider: "+provider);
+        	});
+            $("#domain").change(function () {
+        	    var str = "";
+        	    str=$('#domain').val();
+        	    /* $.getJSON('/providers?domain='+str, function (data) {
+        	    	
+        	    	var list=data.filestore.location.file;
+                    $.each(list, function (index, value) {
                         // APPEND OR INSERT DATA TO SELECT ELEMENT.
                         $('#provider').append('<option value="' + value.name.split("_")[0] + '">' + value.name.split("_")[0] + '</option>');
                     });
-        		}
-        		else{
-        			$('#provider option').remove();
-        			$('#provider').append('<option value="">---Select---</option>');
-        		}
+                   
+                }); */
+                var jqxhr=$.ajax('/providers?domain='+str)
+                	.done(function(data){
+                		
+                		var error=data.error;
+                		if(!error){
+                			var list=data.filestore.location.file;
+                			$.each(list, function (index, value) {
+                                // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                                $('#provider').append('<option value="' + value.name.split("_")[0] + '">' + value.name.split("_")[0] + '</option>');
+                            });
+                		}
+                		else{
+                			$('#provider option').remove();
+                			$('#provider').append('<option value="">---Select---</option>');
+                		}
+                        
+                	});
+                	
                 
-        	});
-        	
-        
-	    	
-	  })
-	  .change();
-	</script>
-  </body>
+        	    	
+        	  })
+        	  .change();
+        });
+    </script>
+</body>
 
 </html>
