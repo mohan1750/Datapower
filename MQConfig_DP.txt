@@ -1,0 +1,97 @@
+define lstr(LS) trptype(TCP) port(1414)
+     1 : define lstr(LS) trptype(TCP) port(1414)
+AMQ8626: WebSphere MQ listener created.
+start lstr(LS)
+     2 : start lstr(LS)
+AMQ8021: Request to start WebSphere MQ listener accepted.
+dis lsstatus(LS)
+     3 : dis lsstatus(LS)
+AMQ8631: Display listener status details.
+   LISTENER(LS)                            STATUS(RUNNING)
+   PID(7922)                               STARTDA(2019-02-17)
+   STARTTI(02.19.39)                       DESCR( )
+   TRPTYPE(TCP)                            CONTROL(MANUAL)
+   IPADDR(*)                               PORT(1414)
+   BACKLOG(100)
+define ql(INQ)
+     4 : define ql(INQ)
+AMQ8006: WebSphere MQ queue created.
+define ql(OUTQ)
+     5 : define ql(OUTQ)
+AMQ8006: WebSphere MQ queue created.
+define ql(ERRQ)
+     6 : define ql(ERRQ)
+AMQ8006: WebSphere MQ queue created.
+alter channel(SYSTEM.DEF.SVRCONN) chltype(SVRCONN) trptype(TCP) mcauser('mqm')
+     7 : alter channel(SYSTEM.DEF.SVRCONN) chltype(SVRCONN) trptype(TCP) mcauser('mqm')
+AMQ8016: WebSphere MQ channel changed.
+set chlauth(SYSTEM.DEF.SVRCONN) type(ADDRESSMAP) address(*) usersrc(CHANNEL)
+     8 : set chlauth(SYSTEM.DEF.SVRCONN) type(ADDRESSMAP) address(*) usersrc(CHANNEL)
+AMQ8877: WebSphere MQ channel authentication record set.
+set chlauth(SYSTEM.DEF.SVRCONN) type(BLOCKUSER) userlist('nobody')
+     9 : set chlauth(SYSTEM.DEF.SVRCONN) type(BLOCKUSER) userlist('nobody')
+AMQ8877: WebSphere MQ channel authentication record set.
+refresh security type(AUTHSERV)
+    10 : refresh security type(AUTHSERV)
+AMQ8560: WebSphere MQ security cache refreshed.
+dis chs(*)
+    11 : dis chs(*)
+AMQ8417: Display Channel Status details.
+   CHANNEL(SYSTEM.DEF.SVRCONN)             CHLTYPE(SVRCONN)
+   CONNAME(10.0.0.100)                     CURRENT
+   STATUS(STOPPING)                        SUBSTATE(NAMESERVER)
+AMQ8417: Display Channel Status details.
+   CHANNEL(SYSTEM.DEF.SVRCONN)             CHLTYPE(SVRCONN)
+   CONNAME(10.0.0.100)                     CURRENT
+   STATUS(STOPPING)                        SUBSTATE(NAMESERVER)
+AMQ8417: Display Channel Status details.
+   CHANNEL(SYSTEM.DEF.SVRCONN)             CHLTYPE(SVRCONN)
+   CONNAME(10.0.0.100)                     CURRENT
+   STATUS(STOPPING)                        SUBSTATE(NAMESERVER)
+AMQ8417: Display Channel Status details.
+   CHANNEL(SYSTEM.DEF.SVRCONN)             CHLTYPE(SVRCONN)
+   CONNAME(10.0.0.100)                     CURRENT
+   STATUS(STOPPING)                        SUBSTATE(NAMESERVER)
+AMQ8417: Display Channel Status details.
+   CHANNEL(SYSTEM.DEF.SVRCONN)             CHLTYPE(SVRCONN)
+   CONNAME(10.0.0.100)                     CURRENT
+   STATUS(STOPPING)                        SUBSTATE(NAMESERVER)
+AMQ8417: Display Channel Status details.
+   CHANNEL(SYSTEM.DEF.SVRCONN)             CHLTYPE(SVRCONN)
+   CONNAME(10.0.0.100)                     CURRENT
+   STATUS(RUNNING)                         SUBSTATE(NAMESERVER)
+AMQ8417: Display Channel Status details.
+   CHANNEL(SYSTEM.DEF.SVRCONN)             CHLTYPE(SVRCONN)
+   CONNAME(10.0.0.100)                     CURRENT
+   STATUS(RUNNING)                         SUBSTATE(NAMESERVER)
+AMQ8417: Display Channel Status details.
+   CHANNEL(SYSTEM.DEF.SVRCONN)             CHLTYPE(SVRCONN)
+   CONNAME(10.0.0.100)                     CURRENT
+   STATUS(RUNNING)                         SUBSTATE(NAMESERVER)
+AMQ8417: Display Channel Status details.
+   CHANNEL(SYSTEM.DEF.SVRCONN)             CHLTYPE(SVRCONN)
+   CONNAME(10.0.0.100)                     CURRENT
+   STATUS(RUNNING)                         SUBSTATE(NAMESERVER)
+AMQ8417: Display Channel Status details.
+   CHANNEL(SYSTEM.DEF.SVRCONN)             CHLTYPE(SVRCONN)
+   CONNAME(10.0.0.100)                     CURRENT
+   STATUS(RUNNING)                         SUBSTATE(MQICALL)
+AMQ8417: Display Channel Status details.
+   CHANNEL(SYSTEM.DEF.SVRCONN)             CHLTYPE(SVRCONN)
+   CONNAME(10.0.0.100)                     CURRENT
+   STATUS(RUNNING)                         SUBSTATE(NAMESERVER)
+ALTER AUTHINFO(SYSTEM.DEFAULT.AUTHINFO.IDPWOS) AUTHTYPE(IDPWOS) CHCKCLNT(NONE) CHCKLOCL(NONE)
+    12 : ALTER AUTHINFO(SYSTEM.DEFAULT.AUTHINFO.IDPWOS) AUTHTYPE(IDPWOS) CHCKCLNT(NONE) CHCKLOCL(NONE)
+AMQ8567: WebSphere MQ authentication information changed.
+dis qmgr chlauth
+    13 : dis qmgr chlauth
+AMQ8408: Display Queue Manager details.
+   QMNAME(QM)                              CHLAUTH(ENABLED)
+refresh security type(AUTHSERV)
+    14 : refresh security type(AUTHSERV)
+AMQ8560: WebSphere MQ security cache refreshed.
+end
+    15 : end
+14 MQSC commands read.
+No commands have a syntax error.
+All valid MQSC commands were processed.

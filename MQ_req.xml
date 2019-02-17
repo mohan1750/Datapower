@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<B2BGatewayRq>
+	<B2BGatewayRqHdr>
+			<MessageHeader>
+                <sourceSystemMessageID>12345</sourceSystemMessageID>			
+                <emittedBySourceSystemInstance>
+						<name>ET</name>
+						<originANZApp>ET</originANZApp>
+                </emittedBySourceSystemInstance>
+			</MessageHeader>
+			<RoutingInfo>
+					<targetApp>CSP</targetApp>
+					<targetServiceName>PostData</targetServiceName>
+					<targetServiceURI>/post/data</targetServiceURI>
+					<targetServiceVersion>v1</targetServiceVersion>
+					<targetMethod>POST</targetMethod>
+					<ContentType>application/xml</ContentType>
+			</RoutingInfo>
+	</B2BGatewayRqHdr>
+	<Payload><![CDATA[
+	<a>1</a>
+	]]>
+	</Payload>
+</B2BGatewayRq>

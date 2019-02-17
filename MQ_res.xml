@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<B2BGatewayRs>
+	<B2BGatewayRsHdr>
+			<MessageHeader>
+                <sourceSystemMessageID></sourceSystemMessageID>			
+                <emittedBySourceSystemInstance>
+						<name></name>
+						<originANZApp></originANZApp>
+                </emittedBySourceSystemInstance>
+			</MessageHeader>
+			<RoutingInfo>
+					<targetApp></targetApp>
+					<targetServiceName></targetServiceName>
+					<targetServiceVersion></targetServiceVersion>
+					<targetMethod></targetMethod>
+					<ContentType></ContentType>
+			</RoutingInfo>
+	</B2BGatewayRsHdr>
+	<Payload>
+	
+	</Payload>
+</B2BGatewayRs>
