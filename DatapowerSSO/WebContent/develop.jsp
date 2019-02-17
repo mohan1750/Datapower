@@ -156,8 +156,8 @@
 						</form>
 						<br />
 						<br />
-						<div class="row">
-							<div class="col-9">
+						<div class="row" >
+							<div class="col-9" id="optionbar">
 								<form class="form-inline">
 									<input id="txtName" type="text" placeholder="ServiceName..."
 										class="form-control mb-2 mr-sm-2 mb-sm-0" /> <input
@@ -264,6 +264,7 @@
 	
 	<script type="text/javascript">
         var grid, dialog;
+        var tabdata=[];
 		/*data = [
                 { 'ID': 1, 'Name': 'Hristo Stoichkov', 'PlaceOfBirth': 'Plovdiv, Bulgaria' },
                 { 'ID': 2, 'Name': 'Ronaldo Luís Nazário de Lima', 'PlaceOfBirth': 'Rio de Janeiro, Brazil' },
@@ -307,20 +308,8 @@
             }
         }
         $(document).ready(function () {
-           /* grid = $('#grid').grid({
-                primaryKey: 'ID',
-                dataSource: data,
-                uiLibrary: 'bootstrap4',
-                columns: [
-                    { field: 'ID', width: 48 },
-                    { field: 'Name', sortable: true },
-                    { field: 'PlaceOfBirth', title: 'Place Of Birth', sortable: true },
-                    { title: '', field: 'Edit', width: 42, type: 'icon', icon: 'fa fa-edit', tooltip: 'Edit', events: { 'click': Edit } },
-                    { title: '', field: 'Delete', width: 42, type: 'icon', icon: 'fa fa-remove', tooltip: 'Delete', events: { 'click': Delete } }
-                ],
-                pager: { limit: 5, sizes: [2, 5, 10, 20] }
-            });*/
-            
+           
+            $('optionbar').hide();
             dialog = $('#dialog').dialog({
                 uiLibrary: 'bootstrap4',
                 iconsLibrary: 'fontawesome',
@@ -378,6 +367,7 @@
                         }); */
                         
                         var data=[];
+                        tabdata=entries;
                         $.each(entries, function (index, value) {
                             // APPEND OR INSERT DATA TO SELECT ELEMENT.
                             
@@ -389,7 +379,7 @@
                             entry.Transformation=value.ServiceMetadata.ServiceTransformation;
                             entry.AAA=value.RouterMetadata.Authorize.enabled;
                             entry.TargetApp=value.ServiceMetadata.TargetConfig.name;
-                           console.log("Entry:"+JSON.stringify(entry));
+                           
                             data.push(entry);
                         });
                         
@@ -408,33 +398,40 @@
                                 { title: '', field: 'Edit', width: 42, type: 'icon', icon: 'fa fa-edit', tooltip: 'Edit', events: { 'click': Edit } },
                                 { title: '', field: 'Delete', width: 42, type: 'icon', icon: 'fa fa-remove', tooltip: 'Delete', events: { 'click': Delete } }
                             ],
+                            resizableColumns: true,
+                            detailTemplate: '<div id="tree"></div>',
                             pager: { limit: 5, sizes: [2, 5, 10, 20] }
                         });
-                       
+                       alert("TableData: "+JSON.stringify(tabdata));
+                       grid.on('detailExpand', function (e, $detailWrapper, id) {
+               			var treedata=tabdata[id-1];
+               			$('#tree').tree({
+                              
+                               dataSource:treedata
+                              
+                           });
+                       });
+                       grid.on('detailCollapse', function (e, $detailWrapper, id) {
+                           $detailWrapper.find('table').grid('destroy', true, true);
+                       });
             		}
             		else{
             			alert("No Services available with selected provider:"+provider);
             			
             		}
             		
-            	})
+            	});
+        		
         		 
         	});
             $("#provider").change(function () {
             	$('#grid').grid('destroy', true, true);
             });
+            
             $("#domain").change(function () {
         	    var str = "";
         	    str=$('#domain').val();
-        	    /* $.getJSON('/providers?domain='+str, function (data) {
-        	    	
-        	    	var list=data.filestore.location.file;
-                    $.each(list, function (index, value) {
-                        // APPEND OR INSERT DATA TO SELECT ELEMENT.
-                        $('#provider').append('<option value="' + value.name.split("_")[0] + '">' + value.name.split("_")[0] + '</option>');
-                    });
-                   
-                }); */
+        	    
                 var jqxhr=$.ajax('/providers?domain='+str)
                 	.done(function(data){
                 		
