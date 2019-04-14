@@ -667,10 +667,33 @@
             	
             	
             	tabdata.push(newservice);
-            	if(!providers.include($('#targetApp').val())){
+            	/* if(!providers.include($('#targetApp').val())){
             		alert('Given provider was not avialable');
-            	}
+            	} */
             	console.error('Created Service is:'+JSON.stringify(tabdata));
+            	// Ajax Service start
+            	$.ajax({
+                    url: "/newService",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(tabdata),
+                    contentType: 'application/json',
+                    mimeType: 'application/json',
+                    headers: {
+                        'domain': $('#domain').val(),
+                        'provider': $('#provider').val()
+                    },
+                    success: function (data) {
+                        console.log("Service created");
+                        
+                    } ,
+                    
+                    error:function(data,status,er) {
+                    	console.log(status);
+                        alert("Error creating new service, Please try again later");
+                    }
+                });
+            	// Ajax Service end
             });
             $("#ServiceButton").click(function(){
         		var domain=$('#domain').val();
