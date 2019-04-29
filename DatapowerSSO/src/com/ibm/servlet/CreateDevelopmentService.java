@@ -55,19 +55,20 @@ public class CreateDevelopmentService extends HttpServlet {
         String domain=request.getHeader("domain");
         System.out.println("Domain: "+domain+" Provider: "+provider);
         String xml_data = "<entries>"+XML.toString(obj)+"</entries>";
-        
+        System.out.println("Transformed XML is:"+xml_data);
         String newResult= new TrannsformServiceManifest().transform(xml_data);
         String prettyXml= new XmlFormatter().format(newResult);
         String base64Payload=Base64.getEncoder().encodeToString(prettyXml.getBytes());
        // System.out.println("Transformed Service manifest: "+base64Payload);
         CreateService cs=new CreateService();
         boolean res=cs.create(domain, provider, base64encodedString, host, base64Payload);
-        System.out.println("Service Created:"+ res);
+       // System.out.println("Service Created:"+ res);
         if(res) {
-        	response.setStatus(200, "OK");
+        	
+        	response.setStatus(HttpServletResponse.SC_CREATED);
         }
         else {
-        	response.setStatus(500, "Processing Error");
+        	response.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
         }
 	}
 

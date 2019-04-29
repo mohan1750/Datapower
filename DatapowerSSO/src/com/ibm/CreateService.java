@@ -14,13 +14,13 @@ public class CreateService {
 		SSLUtilities.trustAllHostnames();
 		SSLUtilities.trustAllHttpsCertificates();
 		String payload="{\"LoadConfiguration\":{\"file\":{\"path\": \"/local/ondisk/common/config/"+provider+"_Manifest.xml\",\"content\": \""+data+"\"}}}";
-		System.out.println("Posted Service: "+payload);
+		//System.out.println("Posted Service: "+payload);
 		JSONObject js=new JSONObject(payload);
 		try {
 			Client client = ClientBuilder.newClient();
 			 Invocation.Builder build=client.target("https://"+host+":5554/mgmt/actionqueue/"+domain).request(MediaType.APPLICATION_JSON).header("Authorization", auth);
 			 Response response=build.post(Entity.entity(payload, MediaType.APPLICATION_JSON));
-			 System.out.println("Post response code: "+response.getStatus());
+			 System.out.println("Post response code: "+response.getStatus() instanceof String);
 			 if(response.getStatus() == 202) {
 				 return true;
 			 }

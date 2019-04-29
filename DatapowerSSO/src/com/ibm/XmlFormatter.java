@@ -12,7 +12,7 @@ import javax.xml.transform.stream.StreamSource;
 
 public class XmlFormatter {
 	public String format(String input) {
-		return prettyFormat(input, "2");
+		return prettyFormat(input, "4");
 	}
 	public static String prettyFormat(String input, String indent) {
 		Source xmlInput = new StreamSource(new StringReader(input));

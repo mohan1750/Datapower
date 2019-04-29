@@ -251,17 +251,60 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="modal fade" id="ShowSucess" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Status</h5>
+					<button class="close" type="button" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div class="modal-body"><p class="text-success">Service operations performed successfully</p></div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary" type="button"
+						data-dismiss="modal">Close</button>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="ShowFail" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Status</h5>
+					<button class="close" type="button" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div class="modal-body"><p class="text-danger">Something went wrong in performing Service operations</p></div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary" type="button"
+						data-dismiss="modal">Close</button>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
     <!-- New Service Modal-->
 	<div class="modal fade" tabindex="-1" id="NewServiceModal" data-keyboard="false" data-backdrop="static" role="dialog">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h4 class="modal-title">New Service</h4>
+                            <h4 class="modal-title">Service Management</h4>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 
                             </div>
                             <div class="modal-body">
-                                <form>
+                                <form id="form1" name="form1">
                                     <div class="row"><h2>Service Metadata</h2></div>
                                     <div class="row">
                                        
@@ -498,7 +541,7 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary" id="CreateServiceButton">Create</button>
+                                <button type="submit" class="btn btn-primary" id="CreateServiceButton">Proceed</button>
                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
@@ -516,47 +559,152 @@
 	<script type="text/javascript">
         var grid, dialog;
         var tabdata=[];
-        
-		/*data = [
-                { 'ID': 1, 'Name': 'Hristo Stoichkov', 'PlaceOfBirth': 'Plovdiv, Bulgaria' },
-                { 'ID': 2, 'Name': 'Ronaldo Luís Nazário de Lima', 'PlaceOfBirth': 'Rio de Janeiro, Brazil' },
-                { 'ID': 3, 'Name': 'David Platt', 'PlaceOfBirth': 'Chadderton, Lancashire, England' },
-                { 'ID': 4, 'Name': 'Manuel Neuer', 'PlaceOfBirth': 'Gelsenkirchen, West Germany' },
-                { 'ID': 5, 'Name': 'James Rodríguez', 'PlaceOfBirth': 'Cúcuta, Colombia' },
-                { 'ID': 6, 'Name': 'Dimitar Berbatov', 'PlaceOfBirth': 'Blagoevgrad, Bulgaria' }
-            ];*/
+        dialog = $('#dialog').dialog({
+            uiLibrary: 'bootstrap4',
+            iconsLibrary: 'fontawesome',
+            autoOpen: false,
+            resizable: false,
+            modal: true
+        });
+        function showServiceData(e){
+        	
+        	
+        	
+        	$('#inputProtocol').val(e.method);
+        	$('#inputURIExp').val(e.match);
+        	$('#conditionalRouting').val(e.ServiceMetadata.ConditionalRouting);
+        	$('#inputServiceName').val(e.ServiceMetadata.OperationName);
+        	$('#checkTransformation').val(e.ServiceMetadata.ServiceTransformation);
+        	if(e.ServiceMetadata.ConditionalRouting == 'Y'){
+            	$('#routingType').val(e.ServiceMetadata.Routing.type);
+            	$('#inputroutingpattern').val(e.ServiceMetadata.Routing.content);
+            	$('#condRouterEnabled').show();
+            }
+        	$('#sourceFormat').val(e.ServiceMetadata.SourceConfig.SourceFormat);
+        	$('#targetFormat').val(e.ServiceMetadata.TargetConfig.TargetFormat);
+        	$('#targetApp').val($('#provider').val());
+        	$('#logRule').val(e.RouterMetadata.LogRule);
+        	$('#checkAuthorize').val(e.RouterMetadata.Authorize.enabled);
+        	if(e.RouterMetadata.Authorize.enabled == 'Y'){
+        		
+        		$('#inputAuthorizedEntry').val(e.RouterMetadata.Authorize['attribute-value'].content);
+        		$('#enabledEntry').show();
+        	}
+        	if(e.ServiceMetadata.ServiceTransformation == 'Y'){
+        		$('#sourcetransformType').val(e.ServiceMetadata.SourceConfig.TransformationType);
+        		$('#sctransformPath').val(e.ServiceMetadata.SourceConfig.SCTransform);
+        		$('#cstransformPath').val(e.ServiceMetadata.SourceConfig.CSTransform);
+        		$('#targettransformType').val(e.ServiceMetadata.TargetConfig.TransformationType);
+        		$('#tctransformPath').val(e.ServiceMetadata.TargetConfig.TCTransform);
+        		$('#cttransformPath').val(e.ServiceMetadata.TargetConfig.CTTransform);
+        		$('#targetTransform').show();
+        		$('#sourceTransform').show();
+        	}
+
+        	
+        	$('#NewServiceModal').modal('show');
+        }
         function Edit(e) {
-            $('#ID').val(e.data.id);
-            $('#Name').val(e.data.record.Name);
-            $('#PlaceOfBirth').val(e.data.record.PlaceOfBirth);
-            dialog.open('Edit Player');
-        }
-        function Save() {
-            var record = {
-                ID: $('#ID').val(),
-                Name: $('#Name').val(),
-                PlaceOfBirth: $('#PlaceOfBirth').val()
-            };
-            $.ajax({ url: '/Players/Save', data: { record: record }, method: 'POST' })
-                .done(function () {
-                    dialog.close();
-                    grid.reload();
-                })
-                .fail(function () {
-                    alert('Failed to save.');
-                    dialog.close();
-                });
+        	
+        	showServiceData(tabdata[(e.data.id)-1]);
+        	$("#form1 :input").prop("disabled", false);
+
+        	$("#form1 :selected").prop("disabled", false);
+        	$('#CreateServiceButton').show();
         }
         
+        function loadGrid(data){
+        	
+        	var data=[];
+            
+            console.log(JSON.stringify(tabdata));
+            $.each(tabdata, function (index, value) {
+                // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                
+               var entry={};
+                if(value != null){
+                entry.ID=index+1;
+                entry.ServiceName=value.ServiceMetadata.OperationName;
+                entry.Method=value.method;
+                entry.URI=value.match;
+                entry.Transformation=value.ServiceMetadata.ServiceTransformation;
+                entry.AAA=value.RouterMetadata.Authorize.enabled;
+                entry.TargetApp=value.ServiceMetadata.TargetConfig.name;
+               
+                data.push(entry);
+                }
+            });
+        	grid= $('#grid').grid({
+                primaryKey: 'ID',
+                dataSource: data,
+                uiLibrary: 'bootstrap4',
+                columns: [
+                    { field: 'ID', width: 48 },
+                    { field: 'ServiceName',title: 'Service Name', sortable: true },
+                    { field: 'Method',title: 'Protocol Method'},
+                    { field: 'URI', title: 'Service URI', sortable: true },
+                    { field: 'Transformation',title: 'Transformation'},
+                    { field: 'AAA',title: 'AAA Enabled'},
+                    { field: 'TargetApp',title: 'Target APP'},
+                    { title: '', field: 'Edit', width: 42, type: 'icon', icon: 'fa fa-edit', tooltip: 'Edit', events: { 'click': Edit } },
+                    { title: '', field: 'Delete', width: 42, type: 'icon', icon: 'fa fa-remove', tooltip: 'Delete', events: { 'click': Delete } }
+                ],
+                resizableColumns: true,
+                detailTemplate: '<div id="tree"></div>',
+                pager: { limit: 5, sizes: [2, 5, 10, 20] }
+            });
+           //alert("TableData: "+JSON.stringify(tabdata));
+           grid.on('detailExpand', function (e, $detailWrapper, id) {
+   			var treedata=tabdata[id-1];
+   			
+   			showServiceData(treedata);
+   			$("#form1 :input").prop("disabled", true);
+
+        	$("#form1 :selected").prop("disabled", true);
+        	$('#CreateServiceButton').hide();
+           });
+           grid.on('detailCollapse', function (e, $detailWrapper, id) {
+               $detailWrapper.find('table').grid('destroy', true, true);
+           });
+        }
         function Delete(e) {
-            if (confirm('Are you sure?')) {
-                $.ajax({ url: '/Players/Delete', data: { id: e.data.id }, method: 'POST' })
-                    .done(function () {
-                        grid.reload();
-                    })
-                    .fail(function () {
-                        alert('Failed to delete.');
-                    });
+        	
+        	console.log('Selected Service is: '+JSON.stringify(tabdata[(e.data.id)-1]));
+        	
+        	console.log('After Deletion of Service is: '+JSON.stringify(tabdata));
+            if (confirm('Are you sure you want to delete service with name '+tabdata[(e.data.id)-1].ServiceMetadata.OperationName+'?')) {
+            	delete tabdata[e.data.id-1];
+            	$.ajax({
+                    url: "/newService",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(tabdata),
+                    contentType: 'application/json',
+                    mimeType: 'application/json',
+                    headers: {
+                        'domain': $('#domain').val(),
+                        'provider': $('#provider').val()
+                    },
+                    statusCode: {
+                        201: function(responseObject, textStatus, jqXHR) {
+                        	console.log( "Service Deleted" );
+                        	
+                        	$("#ShowSucess").modal({
+                        		  fadeDuration: 1
+                        		});
+                        	$('#ShowSucess').modal('show');
+                        	grid.removeRow(e.data.id);
+                        },
+                        501: function(responseObject, textStatus, errorThrown) {
+                        	$("#ShowFail").modal({
+                      		  fadeDuration: 1
+                      		});
+                        	$('#ShowFail').modal('show');
+                        }
+            	}});
+                   
+                
+                
             }
         }
         $(document).ready(function () {
@@ -568,20 +716,21 @@
     		$('#customTargettransform').hide();
     		$('#customSourcetransform').hide();
             $('optionbar').hide();
-            dialog = $('#dialog').dialog({
+            $('#btnAdd').prop('disabled', true);
+            /* dialog = $('#dialog').dialog({
                 uiLibrary: 'bootstrap4',
                 iconsLibrary: 'fontawesome',
                 autoOpen: false,
                 resizable: false,
                 modal: true
-            });
+            }); */
             /*$('#btnAdd').on('click', function () {
                 $('#ID').val('');
                 $('#Name').val('');
                 $('#PlaceOfBirth').val('');
                 dialog.open('Add Player');
             });*/
-            $('#btnSave').on('click', Save);
+           // $('#btnSave').on('click', Save);
             $('#btnCancel').on('click', function () {
                 dialog.close();
             });
@@ -670,7 +819,7 @@
             	/* if(!providers.include($('#targetApp').val())){
             		alert('Given provider was not avialable');
             	} */
-            	console.error('Created Service is:'+JSON.stringify(tabdata));
+            	//console.error('Created Service is:'+JSON.stringify(tabdata));
             	// Ajax Service start
             	$.ajax({
                     url: "/newService",
@@ -683,15 +832,26 @@
                         'domain': $('#domain').val(),
                         'provider': $('#provider').val()
                     },
-                    success: function (data) {
-                        console.log("Service created");
-                        
-                    } ,
                     
-                    error:function(data,status,er) {
-                    	console.log(status);
-                        alert("Error creating new service, Please try again later");
-                    }
+                    statusCode: {
+                        201: function(responseObject, textStatus, jqXHR) {
+                        	console.log( "Service Created" );
+                        	grid.addRow({ 'ID': grid.count(true) + 1, 'ServiceName': newservice.ServiceMetadata.OperationName, 'Method': newservice.method,'URI': newservice.match,'Transformation':newservice.ServiceMetadata.ServiceTransformation,'AAA': newservice.RouterMetadata.Authorize.enabled,'TargetApp':$('#provider').val()});
+                        	$('#NewServiceModal').modal('hide');
+                        	$("#ShowSucess").modal({
+                        		  fadeDuration: 1
+                        		});
+                        	$('#ShowSucess').modal('show');
+                        },
+                        501: function(responseObject, textStatus, errorThrown) {
+                        	alert( "Service Creation failed" );
+                        	$('#NewServiceModal').modal('hide'); 
+                        	$("#ShowFail").modal({
+                      		  fadeDuration: 1
+                      		});
+                        	$('#ShowFail').modal('show');
+                        	}
+            	}
                 });
             	// Ajax Service end
             });
@@ -705,61 +865,11 @@
             	.done(function(entries){
             		var error=entries.error;
             		if(!error){
-            			/*var list=data.filestore.location.file;
-            			$.each(list, function (index, value) {
-                            // APPEND OR INSERT DATA TO SELECT ELEMENT.
-                            $('#provider').append('<option value="' + value.name.split("_")[0] + '">' + value.name.split("_")[0] + '</option>');
-                        }); */
-                        
-                        var data=[];
+            			
                         tabdata=entries;
-                        console.log(JSON.stringify(tabdata));
-                        $.each(entries, function (index, value) {
-                            // APPEND OR INSERT DATA TO SELECT ELEMENT.
-                            
-                           var entry={};
-                            entry.ID=index+1;
-                            entry.ServiceName=value.ServiceMetadata.OperationName;
-                            entry.Method=value.method;
-                            entry.URI=value.match;
-                            entry.Transformation=value.ServiceMetadata.ServiceTransformation;
-                            entry.AAA=value.RouterMetadata.Authorize.enabled;
-                            entry.TargetApp=value.ServiceMetadata.TargetConfig.name;
-                           
-                            data.push(entry);
-                        });
-                        
-                        grid= $('#grid').grid({
-                            primaryKey: 'ID',
-                            dataSource: data,
-                            uiLibrary: 'bootstrap4',
-                            columns: [
-                                { field: 'ID', width: 48 },
-                                { field: 'ServiceName',title: 'Service Name', sortable: true },
-                                { field: 'Method',title: 'Protocol Method'},
-                                { field: 'URI', title: 'Service URI', sortable: true },
-                                { field: 'Transformation',title: 'Transformation'},
-                                { field: 'AAA',title: 'AAA Enabled'},
-                                { field: 'TargetApp',title: 'Target APP'},
-                                { title: '', field: 'Edit', width: 42, type: 'icon', icon: 'fa fa-edit', tooltip: 'Edit', events: { 'click': Edit } },
-                                { title: '', field: 'Delete', width: 42, type: 'icon', icon: 'fa fa-remove', tooltip: 'Delete', events: { 'click': Delete } }
-                            ],
-                            resizableColumns: true,
-                            detailTemplate: '<div id="tree"></div>',
-                            pager: { limit: 5, sizes: [2, 5, 10, 20] }
-                        });
-                       //alert("TableData: "+JSON.stringify(tabdata));
-                       grid.on('detailExpand', function (e, $detailWrapper, id) {
-               			var treedata=tabdata[id-1];
-               			$('#tree').tree({
-                              
-                               dataSource:treedata
-                              
-                           });
-                       });
-                       grid.on('detailCollapse', function (e, $detailWrapper, id) {
-                           $detailWrapper.find('table').grid('destroy', true, true);
-                       });
+                      
+                        loadGrid(tabdata);
+                        $('#btnAdd').prop('disabled', false);
             		}
             		else{
             			alert("No Services available with selected provider:"+provider);
@@ -772,6 +882,7 @@
         	});
             $("#provider").change(function () {
             	$('#grid').grid('destroy', true, true);
+            	$('#btnAdd').prop('disabled', true);
             	
             });
             $('#checkAuthorize').change(function () {
@@ -855,7 +966,7 @@
             });
             $("#domain").change(function () {
         	    var str = "";
-        	    
+        	    $('#btnAdd').prop('disabled', true);
         	    str=$('#domain').val();
         	    $('#provider option').remove();
     			$('#provider').append('<option value="">---Select---</option>');

@@ -7,6 +7,7 @@
 		</xsl:element>
 	</xsl:template>
 	<xsl:template match="array">
+	  <xsl:if test="(string-length(./match) != 0) and string-length(./method != 0) and string-length(./ServiceMetadata/OperationName != 0)">	
 		<xsl:element name="entry">
 			<xsl:attribute name="match"><xsl:value-of select="./match"/></xsl:attribute>
 			<xsl:attribute name="method"><xsl:value-of select="./method"/></xsl:attribute>
@@ -47,5 +48,6 @@
 				</xsl:element>
 			</xsl:element>
 		</xsl:element>
+	  </xsl:if>
 	</xsl:template>
 </xsl:stylesheet>
