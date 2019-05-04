@@ -213,7 +213,7 @@
 		<footer class="sticky-footer">
 			<div class="container my-auto">
 				<div class="copyright text-center my-auto">
-					<span>Copyright © Your Website 2018</span>
+					<span>Copyright Â© Your Website 2018</span>
 				</div>
 			</div>
 		</footer>
@@ -238,7 +238,7 @@
 					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
 					<button class="close" type="button" data-dismiss="modal"
 						aria-label="Close">
-						<span aria-hidden="true">×</span>
+						<span aria-hidden="true">Ã—</span>
 					</button>
 				</div>
 				<div class="modal-body">Select "Logout" below if you are ready
@@ -260,7 +260,7 @@
 					<h5 class="modal-title" id="exampleModalLabel">Status</h5>
 					<button class="close" type="button" data-dismiss="modal"
 						aria-label="Close">
-						<span aria-hidden="true">×</span>
+						<span aria-hidden="true">Ã—</span>
 					</button>
 				</div>
 				<div class="modal-body"><p class="text-success">Service operations performed successfully</p></div>
@@ -281,7 +281,7 @@
 					<h5 class="modal-title" id="exampleModalLabel">Status</h5>
 					<button class="close" type="button" data-dismiss="modal"
 						aria-label="Close">
-						<span aria-hidden="true">×</span>
+						<span aria-hidden="true">Ã—</span>
 					</button>
 				</div>
 				<div class="modal-body"><p class="text-danger">Something went wrong in performing Service operations</p></div>
@@ -300,7 +300,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                             <h4 class="modal-title">Service Management</h4>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <button type="button" class="close" data-dismiss="modal" onclick="grid.collapseAll(); $('#form1 :input').prop('disabled', false);$('#form1 :selected').prop('disabled', false); $('#CreateServiceButton').show(); $('#UpdateServiceButton').hide(); clearServiceData();">&times;</button>
                                 
                             </div>
                             <div class="modal-body">
@@ -541,8 +541,9 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary" id="CreateServiceButton">Proceed</button>
-                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" id="CreateServiceButton">Create</button>
+                                <button type="button" class="btn btn-primary" id="UpdateServiceButton">Update</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="grid.collapseAll(); $('#form1 :input').prop('disabled', false);$('#form1 :selected').prop('disabled', false); $('#CreateServiceButton').show(); $('#UpdateServiceButton').hide(); clearServiceData();">Close</button>
                             </div>
                         </div>
                     </div>
@@ -566,6 +567,36 @@
             resizable: false,
             modal: true
         });
+        function clearServiceData(){
+        	$('#inputProtocol').val('');
+        	$('#inputURIExp').val('');
+        	$('#conditionalRouting').val('');
+        	$('#inputServiceName').val('');
+        	$('#checkTransformation').val('');
+        	
+            	$('#routingType').val('');
+            	$('#inputroutingpattern').val('');
+            
+            
+        	$('#sourceFormat').val('');
+        	$('#targetFormat').val('');
+        	$('#targetApp').val($('#provider').val());
+        	$('#logRule').val('');
+        	$('#checkAuthorize').val('');
+        	
+        		
+        		$('#inputAuthorizedEntry').val('');
+        		
+        	
+        		$('#sourcetransformType').val('');
+        		$('#sctransformPath').val('');
+        		$('#cstransformPath').val('');
+        		$('#targettransformType').val('');
+        		$('#tctransformPath').val('');
+        		$('#cttransformPath').val('');
+        	
+        	
+        }
         function showServiceData(e){
         	
         	
@@ -605,12 +636,15 @@
         	$('#NewServiceModal').modal('show');
         }
         function Edit(e) {
+        	$('#CreateServiceButton').hide();
+        	$('#UpdateServiceButton').show();
         	
         	showServiceData(tabdata[(e.data.id)-1]);
-        	$("#form1 :input").prop("disabled", false);
-
+        	$("#form1 :input").prop("disabled", false);      	
         	$("#form1 :selected").prop("disabled", false);
-        	$('#CreateServiceButton').show();
+        	$('#inputProtocol').prop("disabled", true);
+        	$('#inputURIExp').prop("disabled", true);
+        	$('#inputServiceName').prop("disabled", true);
         }
         
         function loadGrid(data){
@@ -662,6 +696,7 @@
 
         	$("#form1 :selected").prop("disabled", true);
         	$('#CreateServiceButton').hide();
+        	$('#UpdateServiceButton').hide();
            });
            grid.on('detailCollapse', function (e, $detailWrapper, id) {
                $detailWrapper.find('table').grid('destroy', true, true);
@@ -748,7 +783,7 @@
             window.onpopstate = function () {
                 history.go(1);
             }; 
-            
+            $('#UpdateServiceButton').hide();
             $.getJSON('/domains', function (data) {
             	var list=data.domain;
             	$('#domain').append('<option value="">---Select---</option>');
@@ -813,8 +848,14 @@
             	
             	newservice.ServiceMetadata=ServiceMetadata;
             	newservice.RouterMetadata=RouterMetadata;
-            	
-            	
+            	var protocol=$('#inputProtocol').val();
+            	var uri_exp=$('#inputURIExp').val();
+            	var serv_name=$('#inputServiceName').val();
+            	var Filter_serv=$.grep(tabdata, function(obj) {
+            	    return obj.method === protocol && obj.match === uri_exp && obj.ServiceMetadata.OperationName === serv_name;
+            	});
+            	console.error('Matched Services:'+JSON.stringify(Filter_serv));
+            	if(Filter_serv.length == 0){
             	tabdata.push(newservice);
             	/* if(!providers.include($('#targetApp').val())){
             		alert('Given provider was not avialable');
@@ -838,6 +879,7 @@
                         	console.log( "Service Created" );
                         	grid.addRow({ 'ID': grid.count(true) + 1, 'ServiceName': newservice.ServiceMetadata.OperationName, 'Method': newservice.method,'URI': newservice.match,'Transformation':newservice.ServiceMetadata.ServiceTransformation,'AAA': newservice.RouterMetadata.Authorize.enabled,'TargetApp':$('#provider').val()});
                         	$('#NewServiceModal').modal('hide');
+                        	$('UpdateServiceButton').hide();
                         	$("#ShowSucess").modal({
                         		  fadeDuration: 1
                         		});
@@ -853,6 +895,125 @@
                         	}
             	}
                 });
+            	}
+            	else{
+            		alert("Already Service exists");
+            	}
+            	// Ajax Service end
+            });
+            $("#UpdateServiceButton").click(function(){
+            	var protocol=$('#inputProtocol').val();
+            	var uri_exp=$('#inputURIExp').val();
+            	var serv_name=$('#inputServiceName').val();
+            	var Filter_serv=$.grep(tabdata, function(obj) {
+            	    return obj.method === protocol && obj.match === uri_exp && obj.ServiceMetadata.OperationName === serv_name;
+            	});
+            	//console.error('Matched Services:'+JSON.stringify(Filter_serv));
+            	if(Filter_serv.length > 0){
+            		var newservice=Filter_serv[0];
+            	//console.log('Selected Service is: '+JSON.stringify(newservice));
+            	
+            	var ServiceMetadata={};
+            	var RouterMetadata={};
+            	var SourceConfig={};
+            	var TargetConfig={};
+            	var Routing={};
+            	var EndpointConfig={};
+            	var Authorize={};
+            	var attribute={};
+            	
+            	newservice.method=$('#inputProtocol').val();
+            	newservice.match=$('#inputURIExp').val();
+            	ServiceMetadata.ConditionalRouting=$('#conditionalRouting').val();
+            	ServiceMetadata.OperationName=$('#inputServiceName').val();
+            	ServiceMetadata.ServiceTransformation=$('#checkTransformation').val();
+            	
+            	if($('#conditionalRouting').val() == 'Y'){
+            	Routing.type=$('#routingType').val();
+            	Routing.content=$('#inputroutingpattern').val();
+            	ServiceMetadata.Routing=Routing;
+            	}
+            	
+            	SourceConfig.SourceFormat=$('#sourceFormat').val();
+            	if($('#checkTransformation').val() == 'Y'){
+            		SourceConfig.TransformationType=$('#sourcetransformType').val();
+            		SourceConfig.SCTransform=$('#sctransformPath').val();
+            		SourceConfig.CSTransform=$('#cstransformPath').val();
+            	}
+            	
+            	TargetConfig.TargetFormat=$('#targetFormat').val();
+            	TargetConfig.name=$('#targetApp').val();
+            	EndpointConfig.TargetSystem=$('#targetApp').val();
+            	TargetConfig.EndpointConfig=EndpointConfig;
+            	if($('#checkTransformation').val() == 'Y'){
+            		TargetConfig.TransformationType=$('#targettransformType').val();
+            		TargetConfig.TCTransform=$('#tctransformPath').val();
+            		TargetConfig.CTTransform=$('#cttransformPath').val();
+            	}
+            	
+            	ServiceMetadata.SourceConfig=SourceConfig;
+            	ServiceMetadata.TargetConfig=TargetConfig;
+            	ServiceMetadata.Routing=Routing;
+            	RouterMetadata.LogRule=$('#logRule').val();
+            	Authorize.enabled=$('#checkAuthorize').val();
+            	if($('#checkAuthorize').val() == 'Y'){
+            		attribute.name ='member';
+            		attribute.content =$('#inputAuthorizedEntry').val();
+            		Authorize['attribute-value']=attribute;
+            	}
+            	RouterMetadata.Authorize=Authorize;
+            	
+            	newservice.ServiceMetadata=ServiceMetadata;
+            	newservice.RouterMetadata=RouterMetadata;
+            	
+            	
+            	tabdata[index]=newservice;
+            	/* if(!providers.include($('#targetApp').val())){
+            		alert('Given provider was not avialable');
+            	} */
+            	//console.error('Updated Service is:'+JSON.stringify(newservice));
+            	// Ajax Service start
+            	var index=tabdata.findIndex(function checkIndex(obj){
+            		return obj.method === protocol && obj.match === uri_exp && obj.ServiceMetadata.OperationName === serv_name ;
+            	})+1;
+            	//console.error('Updated Service index is: '+index);
+            	$.ajax({
+                    url: "/newService",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(tabdata),
+                    contentType: 'application/json',
+                    mimeType: 'application/json',
+                    headers: {
+                        'domain': $('#domain').val(),
+                        'provider': $('#provider').val()
+                    },
+                    
+                    statusCode: {
+                        201: function(responseObject, textStatus, jqXHR) {
+                        	console.log( "Service Modified" );
+                        	grid.updateRow(parseInt(index), { 'ID': parseInt(index), 'ServiceName': newservice.ServiceMetadata.OperationName, 'Method': newservice.method,'URI': newservice.match,'Transformation':newservice.ServiceMetadata.ServiceTransformation,'AAA': newservice.RouterMetadata.Authorize.enabled,'TargetApp':$('#provider').val()});
+                        	$('#NewServiceModal').modal('hide');
+                        	$("#ShowSucess").modal({
+                        		  fadeDuration: 1
+                        		});
+                        	$('#ShowSucess').modal('show');
+                        },
+                        501: function(responseObject, textStatus, errorThrown) {
+                        	alert( "Service Modification failed" );
+                        	$('#NewServiceModal').modal('hide'); 
+                        	$("#ShowFail").modal({
+                      		  fadeDuration: 1
+                      		});
+                        	$('#ShowFail').modal('show');
+                        	}
+            	}
+                });
+            	}
+            	
+            	else{
+            		alert("No Service exists with this name");
+            	}
             	// Ajax Service end
             });
             $("#ServiceButton").click(function(){
