@@ -213,7 +213,7 @@
 		<footer class="sticky-footer">
 			<div class="container my-auto">
 				<div class="copyright text-center my-auto">
-					<span>Copyright Â© Your Website 2018</span>
+					<span>Copyright © Your Website 2018</span>
 				</div>
 			</div>
 		</footer>
@@ -238,7 +238,7 @@
 					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
 					<button class="close" type="button" data-dismiss="modal"
 						aria-label="Close">
-						<span aria-hidden="true">Ã—</span>
+						<span aria-hidden="true">×</span>
 					</button>
 				</div>
 				<div class="modal-body">Select "Logout" below if you are ready
@@ -260,7 +260,7 @@
 					<h5 class="modal-title" id="exampleModalLabel">Status</h5>
 					<button class="close" type="button" data-dismiss="modal"
 						aria-label="Close">
-						<span aria-hidden="true">Ã—</span>
+						<span aria-hidden="true">×</span>
 					</button>
 				</div>
 				<div class="modal-body"><p class="text-success">Service operations performed successfully</p></div>
@@ -281,7 +281,7 @@
 					<h5 class="modal-title" id="exampleModalLabel">Status</h5>
 					<button class="close" type="button" data-dismiss="modal"
 						aria-label="Close">
-						<span aria-hidden="true">Ã—</span>
+						<span aria-hidden="true">×</span>
 					</button>
 				</div>
 				<div class="modal-body"><p class="text-danger">Something went wrong in performing Service operations</p></div>
@@ -704,10 +704,12 @@
         }
         function Delete(e) {
         	
-        	console.log('Selected Service is: '+JSON.stringify(tabdata[(e.data.id)-1]));
-        	
-        	console.log('After Deletion of Service is: '+JSON.stringify(tabdata));
-            if (confirm('Are you sure you want to delete service with name '+tabdata[(e.data.id)-1].ServiceMetadata.OperationName+'?')) {
+        	//console.log('Selected Service is: '+JSON.stringify(tabdata[(e.data.id)-1]));
+        	var del_service=JSON.stringify(tabdata[(e.data.id)-1]);
+        	//console.log('After Deletion of Service is: '+JSON.stringify(tabdata));
+        	var reason = prompt("Please enter your justification to delete service", "");
+        	  
+            if (reason != null && reason != '') {
             	delete tabdata[e.data.id-1];
             	$.ajax({
                     url: "/newService",
@@ -722,13 +724,36 @@
                     },
                     statusCode: {
                         201: function(responseObject, textStatus, jqXHR) {
-                        	console.log( "Service Deleted" );
-                        	
-                        	$("#ShowSucess").modal({
-                        		  fadeDuration: 1
-                        		});
-                        	$('#ShowSucess').modal('show');
-                        	grid.removeRow(e.data.id);
+                        	console.log('Loggin Delete event');
+                        	$.ajax({
+                        		url: "/notifydelete",
+                        		type: 'POST',
+                        		dataType: 'json',
+                        		data: del_service,
+                        		contentType: 'application/json',
+                        		mimeType: 'application/json',
+                        		headers: {
+                        			'domain': $('#domain').val(),
+                        			'provider': $('#provider').val(),
+                        			'desc': reason
+                        		},
+                        		statusCode: {
+                        			200: function(responseObject, textStatus, jqXHR) {
+                        				console.log( "Service Deleted" );
+
+                        				$("#ShowSucess").modal({
+                        					  fadeDuration: 1
+                        					});
+                        				$('#ShowSucess').modal('show');
+                        				grid.removeRow(e.data.id);
+                        			},
+                        			501: function(responseObject, textStatus, errorThrown) {
+                        				$("#ShowFail").modal({
+                        				  fadeDuration: 1
+                        				});
+                        				$('#ShowFail').modal('show');
+                        			}
+                        	}});
                         },
                         501: function(responseObject, textStatus, errorThrown) {
                         	$("#ShowFail").modal({
@@ -910,9 +935,10 @@
             	});
             	//console.error('Matched Services:'+JSON.stringify(Filter_serv));
             	if(Filter_serv.length > 0){
-            		var newservice=Filter_serv[0];
-            	//console.log('Selected Service is: '+JSON.stringify(newservice));
-            	
+            		//var newservice=Filter_serv[0];
+            		var current_service=Filter_serv[0];
+            	console.log('Selected Service is: '+JSON.stringify(current_service));
+            	var newservice={};
             	var ServiceMetadata={};
             	var RouterMetadata={};
             	var SourceConfig={};
@@ -967,7 +993,7 @@
             	newservice.RouterMetadata=RouterMetadata;
             	
             	
-            	tabdata[index]=newservice;
+            	
             	/* if(!providers.include($('#targetApp').val())){
             		alert('Given provider was not avialable');
             	} */
@@ -975,8 +1001,13 @@
             	// Ajax Service start
             	var index=tabdata.findIndex(function checkIndex(obj){
             		return obj.method === protocol && obj.match === uri_exp && obj.ServiceMetadata.OperationName === serv_name ;
-            	})+1;
-            	//console.error('Updated Service index is: '+index);
+            	});
+            	console.error('Updated Service index is: '+index);
+            	tabdata[index]=newservice;
+            	var reason = prompt("Please enter your justification to update service", "");
+            	if(reason != null && reason != ''){
+            		
+            	
             	$.ajax({
                     url: "/newService",
                     type: 'POST',
@@ -991,16 +1022,41 @@
                     
                     statusCode: {
                         201: function(responseObject, textStatus, jqXHR) {
-                        	console.log( "Service Modified" );
-                        	grid.updateRow(parseInt(index), { 'ID': parseInt(index), 'ServiceName': newservice.ServiceMetadata.OperationName, 'Method': newservice.method,'URI': newservice.match,'Transformation':newservice.ServiceMetadata.ServiceTransformation,'AAA': newservice.RouterMetadata.Authorize.enabled,'TargetApp':$('#provider').val()});
-                        	$('#NewServiceModal').modal('hide');
-                        	$("#ShowSucess").modal({
-                        		  fadeDuration: 1
-                        		});
-                        	$('#ShowSucess').modal('show');
+                        	$.ajax({
+                        		url: "/notifyupdate",
+                        		type: 'POST',
+                        		dataType: 'json',
+                        		data: JSON.stringify(current_service)+'&'+JSON.stringify(newservice),
+                        		contentType: 'application/json',
+                        		mimeType: 'application/json',
+                        		headers: {
+                        			'domain': $('#domain').val(),
+                        			'provider': $('#provider').val(),
+                        			'desc': reason
+                        		},
+                        		statusCode: {
+                        	                        201: function(responseObject, textStatus, jqXHR) {
+                        	                        	console.log( "Service Modified" );
+                        	                        	grid.updateRow(parseInt(index), { 'ID': parseInt(index), 'ServiceName': newservice.ServiceMetadata.OperationName, 'Method': newservice.method,'URI': newservice.match,'Transformation':newservice.ServiceMetadata.ServiceTransformation,'AAA': newservice.RouterMetadata.Authorize.enabled,'TargetApp':$('#provider').val()});
+                        	                        	$('#NewServiceModal').modal('hide');
+                        	                        	$("#ShowSucess").modal({
+                        	                        		  fadeDuration: 1
+                        	                        		});
+                        	                        	$('#ShowSucess').modal('show');
+                        	                        },
+                        	                        501: function(responseObject, textStatus, errorThrown) {
+                        	                        	
+                        	                        	$('#NewServiceModal').modal('hide'); 
+                        	                        	$("#ShowFail").modal({
+                        	                      		  fadeDuration: 1
+                        	                      		});
+                        	                        	$('#ShowFail').modal('show');
+                        	                        	}
+                        	            	}
+                        	});
                         },
                         501: function(responseObject, textStatus, errorThrown) {
-                        	alert( "Service Modification failed" );
+                        	
                         	$('#NewServiceModal').modal('hide'); 
                         	$("#ShowFail").modal({
                       		  fadeDuration: 1
@@ -1009,6 +1065,7 @@
                         	}
             	}
                 });
+            	}
             	}
             	
             	else{
